@@ -112,6 +112,8 @@ public class Server {
     public static void main(String[] args) {
         try (ServerSocket ss = new ServerSocket(8080)) {
             Server server = new Server(ss);
+            System.out.format("[S] inteAddress: %s\n",ss.getInetAddress());
+            System.out.format("[S] local: %s\n",ss.getLocalSocketAddress());
             System.out.println("[S]: Ready, waiting for clients");
             while (true) {
                 Socket client = ss.accept();
