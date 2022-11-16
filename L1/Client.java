@@ -36,11 +36,9 @@ public class Client implements AutoCloseable {
                             }
                             out.writeUTF(String.format("[Client %s]: %s\n", addr, msg));
                         }
-                        Thread.sleep(50);
                     }
                 } catch (Exception e) {
-                    System.out.println("[Client]->send: Exception");
-                    e.printStackTrace();
+                    System.out.format("[Client]->send: Exception: %s\n", e.getMessage());
                 }
             }
         };
@@ -76,11 +74,10 @@ public class Client implements AutoCloseable {
                     String msg = in.readUTF();
                     System.out.format("%s", msg);
                 }
-                Thread.sleep(50);
+                Thread.sleep(10);
             }
-            Thread.sleep(100);
         } catch (Exception e) {
-            System.out.println("[Client]->main: Exception");
+            System.out.format("[Client]->main: Exception: %s\n", e.getMessage());
         }
     }
 }

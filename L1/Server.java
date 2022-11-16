@@ -22,25 +22,12 @@ public class Server {
         listen();
     }
 
-    public void broadcast(String msg, String senderId) {
-        synchronized(clients) {
-            for (ClientHandler client : clients) {
-                try {
-                    client.out.writeUTF(msg);
-                } catch (Exception e) {
-                    System.err.format("[Server]->broadcast: Could not send to %s\n", client.handlerId);
-                    disconnectClient(client);
-                }
-            }
-        }
-    }
-
-    public void disconnectClient(ClientHandler client) {
+    public void disconnectClient(ClientHandler clientHandler) {
         try {
             synchronized(clients) {
-                client.client.close();
-                clients.remove(client);
-                System.out.format("[Server]: %s disconnected\n", client.handlerId);
+                clientHandler.client.close();
+                clients.remove(clientHandler);
+                System.out.format("[Server]: %s disconnected\n", clientHandler.handlerId);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,13 +40,12 @@ public class Server {
             while(true) {
                 Socket client = ss.accept();
                 System.out.format("[Server]: %d connected\n", client.getPort());
-                ClientHandler clientHandler = new ClientHandler(this, client);
+                ClientHandler clientHandler = new ClientHandler(this, client, clients);
                 clients.add(clientHandler);
                 clientPool.execute(clientHandler);
                 // System.out.format("[Server]: Client Count=%d\n", clients.size());
                 // System.out.format("[Server]->Pool:%s\n", clientPool.toString());
             }
-
         } catch (Exception e) {
             System.err.format("[System]: Error, %s", e.getMessage());
         }
