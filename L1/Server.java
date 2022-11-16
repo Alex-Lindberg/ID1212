@@ -10,12 +10,10 @@ import java.util.concurrent.Semaphore;
 
 public class Server {
 
-    public ServerSocket socket;
     public ArrayList<Handler> handlers;
     public Semaphore lock;
 
-    public Server(ServerSocket socket) {
-        this.socket = socket;
+    public Server() {
         this.handlers = new ArrayList<>();
         this.lock = new Semaphore(1, true);
     }
@@ -53,6 +51,7 @@ public class Server {
             lock.acquire();
             c.close();
             handlers.remove(c);
+            System.out.format("[S]: Client Count=%d\n", handlers.size());
             lock.release();
         } catch (InterruptedException | IOException e) {
             System.out.format("[S, H:%s] disconnect interrupted: %s\n", c.id, e.getMessage());
@@ -111,9 +110,7 @@ public class Server {
 
     public static void main(String[] args) {
         try (ServerSocket ss = new ServerSocket(8080)) {
-            Server server = new Server(ss);
-            System.out.format("[S] inteAddress: %s\n",ss.getInetAddress());
-            System.out.format("[S] local: %s\n",ss.getLocalSocketAddress());
+            Server server = new Server();
             System.out.println("[S]: Ready, waiting for clients");
             while (true) {
                 Socket client = ss.accept();
