@@ -2,7 +2,6 @@ package L1;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -17,7 +16,7 @@ public class Client implements AutoCloseable {
 
     public Client(Socket socket) {
         this.socket = socket;
-        this.addr = socket.getLocalAddress().toString();
+        this.addr = socket.getLocalSocketAddress().toString();
         this.outThread = new Thread(send());
         this.outThread.start();
     }
@@ -34,11 +33,11 @@ public class Client implements AutoCloseable {
                             if (msg.equals("\\q")) {
                                 break;
                             }
-                            out.writeUTF(String.format("[Client %s]: %s\n", addr, msg));
+                            out.writeUTF(String.format("[C %s]: %s\n", addr, msg));
                         }
                     }
                 } catch (Exception e) {
-                    System.out.format("[Client]->send: Exception: %s\n", e.getMessage());
+                    System.out.format("[C]->send: Exception: %s\n", e.getMessage());
                 }
             }
         };
@@ -67,7 +66,7 @@ public class Client implements AutoCloseable {
         try (Socket socket = new Socket(host, port);
                 DataInputStream in = new DataInputStream(socket.getInputStream());
                 Client client = new Client(socket);) {
-            System.out.format("[Client %s]: Connected, type \"\\q\" to exit\n", client.addr);
+            System.out.format("[C %s]: Connected, type \"\\q\" to exit\n", client.addr);
 
             while (client.isActive()) {
                 if (in.available() > 0) {
@@ -77,7 +76,7 @@ public class Client implements AutoCloseable {
                 Thread.sleep(10);
             }
         } catch (Exception e) {
-            System.out.format("[Client]->main: Exception: %s\n", e.getMessage());
+            System.out.format("[C]->main: Exception: %s\n", e.getMessage());
         }
     }
 }
