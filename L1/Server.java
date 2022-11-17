@@ -30,9 +30,10 @@ public class Server {
                     handler.connected = false;
                 }
             }
-            lock.release();
         } catch (InterruptedException ie) {
             System.out.println("[S] Broadcast interrupted");
+        } finally {
+            lock.release();
         }
     }
 
@@ -40,9 +41,9 @@ public class Server {
         try {
             lock.acquire();
             handlers.add(c);
-            lock.release();
         } catch (InterruptedException e) {
             System.out.format("[S, H:%s] connect interrupted: %s\n", c.id, e.getMessage());
+        } finally {
             lock.release();
         }
     }
@@ -53,9 +54,9 @@ public class Server {
             c.close();
             handlers.remove(c);
             System.out.format("[S]: Client Count=%d\n", handlers.size());
-            lock.release();
         } catch (InterruptedException | IOException e) {
             System.out.format("[S, H:%s] disconnect interrupted: %s\n", c.id, e.getMessage());
+        } finally {
             lock.release();
         }
     }
@@ -94,7 +95,7 @@ public class Server {
                         if (msg.equals("\\q")) {
                             break;
                         }
-                        // System.out.print(msg); // prints msg on server
+                        System.out.print(msg); // prints msg on server
                         broadcast(msg);
                     }
                     Thread.sleep(250);
