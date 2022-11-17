@@ -3,6 +3,7 @@ package L1;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class Server {
                         if (msg.equals("\\q")) {
                             break;
                         }
-                        System.out.print(msg);
+                        // System.out.print(msg); // prints msg on server
                         broadcast(msg);
                     }
                     Thread.sleep(250);
@@ -109,7 +110,15 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        try (ServerSocket ss = new ServerSocket(8080)) {
+        String ipString = "127.0.0.1";
+        int port = 8080;
+        if(args.length > 0) ipString = args[0];
+        if(args.length > 1) port = Integer.parseInt(args[1]);
+        try (ServerSocket ss = new ServerSocket()) {
+            InetSocketAddress insa = new InetSocketAddress(ipString, port);
+            ss.bind(insa);
+            String host = ss.getInetAddress().getHostAddress();
+            System.out.format("[S]: Host address %s\n", host);
             Server server = new Server();
             System.out.println("[S]: Ready, waiting for clients");
             while (true) {
