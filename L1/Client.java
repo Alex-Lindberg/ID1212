@@ -64,16 +64,9 @@ public class Client implements AutoCloseable {
     }
 
     public static void main(String[] args) {
-        String host = "";
-        int port = 0;
-        try {
-            host = args[0];
-            port = Integer.parseInt(args[1]);
-        } catch (Exception _e) {
-            System.err.println("Failed to parse args, java L1.Client [host] [port]");
-            System.exit(0);
-        }
-        try (Socket socket = new Socket(host, port);
+        String ipString = args.length > 0 ? args[0] : "127.0.0.1";
+        int port = args.length > 1 ? Integer.parseInt(args[1]) : 8080;
+        try (Socket socket = new Socket(ipString, port);
                 DataInputStream in = new DataInputStream(socket.getInputStream());
                 Client client = new Client(socket);) {
             System.out.format("[C %s]: Connected, type \"\\q\" to exit\n", client.name);

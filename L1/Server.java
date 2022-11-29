@@ -111,15 +111,13 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        String ipString = "127.0.0.1";
-        int port = 8080;
-        if(args.length > 0) ipString = args[0];
-        if(args.length > 1) port = Integer.parseInt(args[1]);
         try (ServerSocket ss = new ServerSocket()) {
-            InetSocketAddress insa = new InetSocketAddress(ipString, port);
-            ss.bind(insa);
-            String host = ss.getInetAddress().getHostAddress();
-            System.out.format("[S]: Host address %s\n", host);
+
+            String ipString = args.length > 0 ? args[0] : "127.0.0.1";
+            int port = args.length > 1 ? Integer.parseInt(args[1]) : 8080;
+            ss.bind(new InetSocketAddress(ipString, port));
+
+            System.out.format("[S]: Host address %s\n", ss.getInetAddress().getHostAddress());
             Server server = new Server();
             System.out.println("[S]: Ready, waiting for clients");
             while (true) {
