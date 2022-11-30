@@ -3,145 +3,127 @@ package L2;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.UUID;
 
 public class HttpServer {
 
-    public static final String HTTP_OK = "HTTP/1.1 200 OK\r\n\r\n";
-    public ServerSocket server;
-    public ArrayList<ClientHandler> handlers = new ArrayList<>();
+    public static final String HTTP_200_OK = "HTTP/1.1 200 OK";
+    public static final String HTTP_404_NOTFOUND = "HTTP/1.1 404 Not Found\n\r\n\r";
+    public static final String PATH = HttpServer.class.getPackageName() + "/public";
+    public static final String SESSION_ID_REGEX = "Cookie: .*sessionId=[\\w-]{36}";
+    public final ServerSocket server;
+    private Map<String, Game> games = Collections.synchronizedMap(new HashMap<>());
 
     public HttpServer(ServerSocket server) {
         this.server = server;
         System.out.println("Server started");
     }
 
-    // private class View {
-    //     public View(String path) {
-    //     }
-    // }
+    public synchronized Game newGame(String key) {
+        games.put(key, new Game(key));
+        return games.get(key);
+    }
+
+    public synchronized Game getGame(String key) {
+        return games.get(key);
+    }
 
     private class ClientHandler extends Thread {
         Socket socket;
-        String sessionId;
         BufferedReader request;
         PrintStream response;
 
         public ClientHandler(Socket socket) throws IOException {
             this.socket = socket;
-            this.sessionId = socket.getRemoteSocketAddress().toString();
             this.request = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.response = new PrintStream(socket.getOutputStream());
         }
 
         @Override
         public void run() {
-            try{
+            try {
+                String query = "", sessionId = "", gameResult = "";
+                Game game = null;
+                // Request
                 String str = request.readLine();
-                System.out.println(str);
                 StringTokenizer tokens = new StringTokenizer(str, " ?");
-                tokens.nextToken(); // The word GET
+                tokens.nextToken();
                 String requestedDocument = tokens.nextToken();
+                String token = tokens.nextToken();
+
+                if (token.trim().matches("Guess=\\d+$")) {
+                    query = token.substring(6).trim();
+                }
+
                 while ((str = request.readLine()) != null && str.length() > 0) {
-                    System.out.println(str);
+                    if (sessionId.equals("") && str.matches(SESSION_ID_REGEX)) {
+                        sessionId = str.substring(18).trim();
+                        game = getGame(sessionId);
+                        if (game.finished) {
+                            game = newGame(sessionId);
+                        }
+                    }
                 }
-                System.out.println("Request processed.");
-                // while(true) {
-                // response.println("HTTP/1.1 200 OK");
-                // response.println("Server: Trash 0.1 Beta");
-                // if (requestedDocument.indexOf(".html") != -1)
-                //     response.println("Content-Type: text/html");
+                socket.shutdownInput();
 
-                // response.println(String.format("Set-Cookie: clientId=%s", sessionId));
-
-
-                response.println("HTTP/1.1 200 OK");
-                response.println("Server: Trash 0.1 Beta");
-
-                if (requestedDocument.indexOf(".html") != -1)
-                    response.println("Content-Type: text/html");
-
-                if (requestedDocument.indexOf(".gif") != -1)
-                    response.println("Content-Type: image/gif");
-
-                response.println("Set-Cookie: clientId=" + sessionId);
-
-                response.println();
-
-                System.out.println("Requesting: " + requestedDocument);
-                String path = HttpServer.class.getPackageName();
-                File f = new File(path + requestedDocument);
-                BufferedReader buffReader = new BufferedReader(new FileReader(f.getAbsolutePath()));
-                
-                String firstHalfHtml = "", secondHalfHtml = "", line = "", answer = "TEST";
-                
-                // while (((line = buffReader.readLine()) != null && !line.contains("/**"))) {
-                //     firstHalfHtml += line + "\n";
-                // }
-
-                // while (!((line = buffReader.readLine()).contains("**/"))) {
-                //     answer += line + "\n";
-                // }
-
-                while (((line = buffReader.readLine()) != null)) {
-                    secondHalfHtml += line + "\n";
+                if (game == null) {
+                    sessionId = UUID.randomUUID().toString();
+                    game = newGame(sessionId);
                 }
 
-                response.println(firstHalfHtml + answer + secondHalfHtml);
-                buffReader.close();
-                socket.shutdownOutput();  
-                // }         
-            } catch (IOException  e) {
-                System.out.println("Giga error");
+                // Playing the game
+                if (query.equals("")) {
+                    gameResult = game.guess(query);
+                }
+
+                // Response
+                File file = new File(PATH + requestedDocument);
+                if (requestedDocument.equals("/favicon.ico")) {
+                    response.println(HTTP_200_OK + "\n\r\n\r");
+                } else if (file.exists() && !file.isDirectory()) {
+                    response.println(HTTP_200_OK);
+                    response.println("Server: NumberGame");
+                    if (requestedDocument.indexOf(".html") != -1) {
+                        response.println("Content-Type: text/html");
+                    }
+
+                    response.println(String.format("Set-Cookie: sessionId=%s", sessionId));
+                    response.println();
+                    String html = View.createResponseHtml(file, gameResult);
+                    response.println(html);
+
+                } else {
+                    response.println(HTTP_404_NOTFOUND);
+                }
+            } catch (FileNotFoundException fe) {
+                System.err.println(fe.getMessage());
+            } catch (IOException e) {
                 System.err.println(e);
             } finally {
                 try {
+                    socket.shutdownOutput();
                     if (this.response != null) this.response.close();
                     if (this.request != null) this.request.close();
                     this.socket.close();
                 } catch (IOException e2) {
-                    System.out.format("Closing err: %s\n", e2.getMessage());
+                    System.out.format("Closing err: %s%n", e2.getMessage());
                 }
             }
         }
     }
 
-    public void initExitHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() { 
-                try {
-                    Thread.sleep(30);
-                    for (ClientHandler h : handlers) {
-                        if ( h != null && h.isAlive())
-                            h.interrupt();
-                    }
-                    System.out.println("\n---\nCleaned up handlers");
-                } catch (InterruptedException e) { System.err.println(e); }
-             }
-        }));
-    }
-
-    public static void main(String args[]) throws IOException {
-        try (ServerSocket server = new ServerSocket(8090)) {
+    public static void main(String[] args) throws IOException {
+        try (ServerSocket server = new ServerSocket(8080)) {
             HttpServer httpServer = new HttpServer(server);
-            httpServer.initExitHook();
-
             while (true) {
                 Socket socket = server.accept();
-                System.out.format("\nClient %s connected\n", socket.getRemoteSocketAddress().toString());
+                System.out.format("Client %s connected%n", socket.getRemoteSocketAddress().toString());
                 ClientHandler handler = httpServer.new ClientHandler(socket);
-                httpServer.handlers.add(handler);
                 handler.start();
-                // String line = "";
-                // while(socket.isConnected()) {
-                // if((line = request.readLine()) != null) {
-                // System.out.println(line);
-                // }
-                // }
-                // out.close();
-                // request.close();
             }
         }
     }

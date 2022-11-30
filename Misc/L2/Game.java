@@ -1,4 +1,4 @@
-package L2;
+package Misc.L2;
 
 import java.util.Random;
 
@@ -19,7 +19,7 @@ public class Game {
         guesses++;
         if (guess == this.secret) {
             this.finished = true;
-            return String.format("You made it in %d guesses!!!", guesses);
+            return String.format("You made it in %d guesses!!!",guesses);
         }
         if (guess < this.secret)
             return String.format("Nope, guess higher%nYou have made %d guess(es)", guesses);
