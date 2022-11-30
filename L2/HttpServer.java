@@ -1,6 +1,7 @@
 package L2;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
@@ -32,6 +33,9 @@ public class HttpServer {
         return games.get(key);
     }
 
+    /**
+     * Controller
+     */
     private class ClientHandler extends Thread {
         Socket socket;
         BufferedReader request;
@@ -117,7 +121,11 @@ public class HttpServer {
     }
 
     public static void main(String[] args) throws IOException {
-        try (ServerSocket server = new ServerSocket(8080)) {
+        try (ServerSocket server = new ServerSocket()) {
+            String ipString = args.length > 0 ? args[0] : "127.0.0.1";
+            int port = args.length > 1 ? Integer.parseInt(args[1]) : 8080;
+            server.bind(new InetSocketAddress(ipString, port));
+
             HttpServer httpServer = new HttpServer(server);
             while (true) {
                 Socket socket = server.accept();
@@ -125,6 +133,8 @@ public class HttpServer {
                 ClientHandler handler = httpServer.new ClientHandler(socket);
                 handler.start();
             }
+        } catch(Exception e) {
+            System.err.format("Exception: %s%n", e.getMessage());
         }
     }
 }
