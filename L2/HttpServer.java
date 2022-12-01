@@ -80,7 +80,7 @@ public class HttpServer {
                 }
 
                 // Playing the game
-                if (query.equals("")) {
+                if (!query.equals("")) {
                     gameResult = game.guess(query);
                 }
 

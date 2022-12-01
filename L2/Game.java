@@ -11,7 +11,7 @@ public class Game {
 
     public Game(String id) {
         this.id = id;
-        this.secret = new Random().nextInt(10 - 0) + 0;
+        this.secret = new Random().nextInt(100);
     }
 
     public String guess(String g) {
