@@ -1,13 +1,25 @@
-package L3;
+// package L3;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.security.KeyStore;
+import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Enumeration;
+
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLSessionContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.SSLContext;
 
 public class IMAPClient implements AutoCloseable {
 
@@ -38,7 +50,7 @@ public class IMAPClient implements AutoCloseable {
 
     public void send(String command) throws IOException, InterruptedException {
         Thread.sleep(250);
-        if(reader.ready())
+        if (reader.ready())
             reader.readLine();
         String req = String.format("A%d %s\r", this.A_num, command);
         if (command.contains("LOGIN")) { // dont print password
@@ -63,10 +75,10 @@ public class IMAPClient implements AutoCloseable {
 
     public void run() throws IOException, InterruptedException {
         String[] commands = {
-            String.format("LOGIN %s %s", USERNAME, PASSWORD),
-            "EXAMINE INBOX",
-            "FETCH 1:1 BODY[TEXT]",
-            "LOGOUT"
+                String.format("LOGIN %s %s", USERNAME, PASSWORD),
+                "EXAMINE INBOX",
+                "FETCH 1 BODY[TEXT]",
+                "LOGOUT"
         };
         readAll();
         for (String command : commands) {
@@ -82,14 +94,41 @@ public class IMAPClient implements AutoCloseable {
         this.socket.close();
     }
 
-    public static void main(String[] args) {
-        SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
-        HttpsURLConnection.setDefaultSSLSocketFactory(sf);
-        try (SSLSocket sslSocket = (SSLSocket) sf.createSocket(HOST, PORT);
-                IMAPClient client = new IMAPClient(sslSocket);) {
+    private static SSLContext sslContext(String password) throws Exception {
+        KeyStore keystore = KeyStore.getInstance("PKCS12"); // rätt
+        try (InputStream in = new FileInputStream("./alex.pfx")) {
+            keystore.load(in, password.toCharArray());
+        }
 
+        // System.out.println(java.util.Arrays.asList(keystore.));
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm()); // fel
+        keyManagerFactory.init(keystore, password.toCharArray());
+
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(
+                keyManagerFactory.getKeyManagers(),null, null);
+
+        return sslContext;
+    }
+
+    public static void main(String[] args) throws Exception {
+        
+        SSLContext context = sslContext("password");
+        // String[] cipher = { "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256" };
+        System.out.println(context.getProtocol());
+        SSLSocketFactory sf = (SSLSocketFactory) context.getSocketFactory();
+        HttpsURLConnection.setDefaultSSLSocketFactory(sf);
+        String[] scs = sf.getSupportedCipherSuites();
+        for (int i = 0; i < scs.length; i++) {
+            System.out.println(scs[i]);
+        }
+        
+        try (SSLSocket sslSocket = (SSLSocket) sf.createSocket(HOST, PORT);) {
+            // sslSocket.setEnabledCipherSuites(scs);
+            IMAPClient client = new IMAPClient(sslSocket);
             System.out.format("Connected with %s%n", sslSocket.getLocalAddress());
             client.run();
+            client.close();
         } catch (IOException | InterruptedException e) {
             System.out.println("(main) Exception caught:");
             System.err.println(e);
