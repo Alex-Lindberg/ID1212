@@ -25,3 +25,7 @@ hs_err_pid*
 Test/
 *.pcapng
 .env
+
+.env
+*.jks
+*.pfx
