@@ -9,5 +9,6 @@
 </h1>
 <br/>
 <a href="hello-servlet">Hello Servlet</a>
+<a href="guessing-game">Guessing Game</a>
 </body>
 </html>
