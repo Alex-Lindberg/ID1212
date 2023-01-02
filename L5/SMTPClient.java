@@ -20,10 +20,10 @@ public class SMTPClient {
     private Session session;
 
     public SMTPClient(String email) {
-        if (PASSWORD == null)
-            throw new AssertionError("PASSWORD not set as environment variable");
         if (USERNAME == null)
-            throw new AssertionError("USERNAME not set as environment variable");
+            throw new AssertionError("KTH_USERNAME not set as environment variable");
+        if (PASSWORD == null)
+            throw new AssertionError("KTH_PASSWORD not set as environment variable");
         this.session = initSession(email);
         this.email = email;
         System.out.println("New session created");
