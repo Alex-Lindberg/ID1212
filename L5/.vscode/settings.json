@@ -1,0 +1,9 @@
+{
+    "java.project.sourcePaths": [
+        "."
+    ],
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/home/nvrmind/dev/java-libs/javax.mail.jar"
+    ]
+}
