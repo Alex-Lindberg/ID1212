@@ -1,5 +1,5 @@
 DROP FUNCTION IF EXISTS new_session, delete_session, register_user, enqueue, create_course;
-DROP TABLE IF EXISTS users, courses, queue_item, messages, administrators, sessions;
+DROP TABLE IF EXISTS users, courses, queue_item, administrators, sessions;
 DROP TYPE IF EXISTS roles, queue_status;
 
 -- ############
@@ -43,16 +43,16 @@ CREATE TABLE IF NOT EXISTS queue_item (
     status queue_status
 );
 
-CREATE TABLE IF NOT EXISTS messages (
-    id UUID PRIMARY KEY,
-    user_id UUID NOT NULL REFERENCES users (id),
-    time timestamp NOT NULL,
-    message text NOT NULL
-);
+-- CREATE TABLE IF NOT EXISTS messages (
+--     id UUID PRIMARY KEY,
+--     user_id UUID NOT NULL REFERENCES users (id),
+--     time timestamp NOT NULL,
+--     message text NOT NULL
+-- );
 
 CREATE TABLE IF NOT EXISTS administrators (
     user_id UUID NOT NULL REFERENCES users (id),
-    courses_id text NOT NULL REFERENCES courses (id)
+    course_id text NOT NULL REFERENCES courses (id)
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
@@ -126,13 +126,6 @@ END
 $$
 LANGUAGE plpgsql;
 
-    -- id UUID PRIMARY KEY,
-    -- user_id UUID NOT NULL REFERENCES users (id),
-    -- course_id text NOT NULL REFERENCES courses (id),
-    -- location text,
-    -- comment text,
-    -- status queue_status
-
 CREATE OR REPLACE FUNCTION enqueue(
     IN user_id UUID, IN course_id text, IN location text, IN comment text, 
     OUT succeeded BOOLEAN) 
@@ -147,3 +140,15 @@ BEGIN
 END
 $$
 LANGUAGE plpgsql;
+
+-- ##########
+--  DEFAULTS
+-- ##########
+
+SELECT register_user('alex', 'alex5@kth.se', '123');
+SELECT register_user('admin', 'admin@kth.se', '123');
+
+UPDATE users SET role='admin' WHERE username IN ('alex', 'admin');
+
+SELECT register_user('test', 'test@kth.se', '123');
+

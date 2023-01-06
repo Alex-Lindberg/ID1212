@@ -47,6 +47,7 @@ const queueRoutes = (app) => {
         authMiddleware.validateSession,
         coursesMiddleware.courseExists(false),
         coursesMiddleware.createCourse,
+        coursesMiddleware.setCourseAdministrator(true),
         responseMiddleware.sendResponse("courses")
     );
     app.delete(
@@ -56,6 +57,7 @@ const queueRoutes = (app) => {
         authMiddleware.getSession,
         authMiddleware.validateSession,
         coursesMiddleware.courseExists(true),
+        coursesMiddleware.isAdministrator,
         coursesMiddleware.deleteCourse,
         responseMiddleware.sendResponse("courses")
     );
@@ -65,9 +67,8 @@ const queueRoutes = (app) => {
         usersMiddleware.getUserByEmail,
         authMiddleware.getSession,
         authMiddleware.validateSession,
-        coursesMiddleware.courseExists(true),
         queueMiddleware.enqueue,
-        responseMiddleware.sendResponse("courses")
+        responseMiddleware.sendResponse("queue")
     );
     app.delete(
         "/api/courses/:courseId/queue",
@@ -75,9 +76,8 @@ const queueRoutes = (app) => {
         usersMiddleware.getUserByEmail,
         authMiddleware.getSession,
         authMiddleware.validateSession,
-        coursesMiddleware.courseExists(true),
         queueMiddleware.dequeue,
-        responseMiddleware.sendResponse("courses")
+        responseMiddleware.sendResponse("queue")
     );
     app.patch(
         "/api/courses/:courseId/queue/:queueItemId",
@@ -85,9 +85,28 @@ const queueRoutes = (app) => {
         usersMiddleware.getUserByEmail,
         authMiddleware.getSession,
         authMiddleware.validateSession,
-        // coursesMiddleware.courseExists(true),
         queueMiddleware.setItem,
-        responseMiddleware.sendResponse("courses")
+        responseMiddleware.sendResponse("queue")
+    );
+    app.post(
+        "/api/courses/:courseId/admin",
+        coursesMiddleware.initLocals,
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
+        coursesMiddleware.isAdministrator,
+        coursesMiddleware.setCourseAdministrator(true),
+        responseMiddleware.sendResponse("queue")
+    );
+    app.delete(
+        "/api/courses/:courseId/admin",
+        coursesMiddleware.initLocals,
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
+        coursesMiddleware.isAdministrator,
+        coursesMiddleware.setCourseAdministrator(false),
+        responseMiddleware.sendResponse("queue")
     );
     app.get(
         "/api/courses",
@@ -95,7 +114,6 @@ const queueRoutes = (app) => {
         usersMiddleware.getUserByEmail,
         authMiddleware.getSession,
         authMiddleware.validateSession,
-        coursesMiddleware.courseExists(true),
         coursesMiddleware.getCourses,
         responseMiddleware.sendResponse("courses")
     );
@@ -105,7 +123,6 @@ const queueRoutes = (app) => {
         usersMiddleware.getUserByEmail,
         authMiddleware.getSession,
         authMiddleware.validateSession,
-        coursesMiddleware.courseExists(true),
         coursesMiddleware.getCourse,
         responseMiddleware.sendResponse("courses")
     );
