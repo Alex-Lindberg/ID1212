@@ -1,29 +1,62 @@
 const { query } = require("../api/db");
+const { getSession } = require("../utils");
 
-const enqueue = (req, res, next) => {
-    return res.send(501);
+const initLocals = (_req, res, next) => {
+    res.locals = {
+        user: null,
+        course: null,
+    };
+    return next();
 };
 
-const dequeue = (req, res, next) => {
-    return res.send(501);
+const enqueue = async (req, res, next) => {
+    try {
+        const session = getSession(req);
+        console.log("session :>> ", session);
+        const succeeded = await query(
+            `SELECT enqueue(
+                '${res.locals.user.id}'::UUID,
+                '${req.params.courseId}',
+                '${req.body.location}', 
+                '${req.body.comment}')`
+        );
+        return next();
+    } catch (error) {
+        console.log("error :>> ", error);
+        return res.sendStatus(500);
+    }
 };
 
-const updateComment = (req, res, next) => {
-    return res.send(501);
+const dequeue = async (req, res, next) => {
+    try {
+    } catch (error) {
+        console.log("error :>> ", error);
+        return res.send(500);
+    }
 };
 
-const updateStatus = (req, res, next) => {
-    return res.send(501);
-};
-
-const updateLocation = (req, res, next) => {
-    return res.send(501);
+const setItem = async (req, res, next) => {
+    try {
+        const comment = req.body.comment ? `'${req.body.comment}'` : null;
+        const status = req.body.status ? `'${req.body.status}'` : null;
+        const location = req.body.location ? `'${req.body.location}'` : null;
+        const pgResponse = await query(
+            `UPDATE queue_item SET 
+                comment= COALESCE (${comment}, comment),
+                status= COALESCE (${status}, status),
+                location= COALESCE (${location}, location)
+            WHERE id='${req.params.queueItemId}'::UUID RETURNING queue_item;`
+        );
+        return next();
+    } catch (error) {
+        console.log("error :>> ", error);
+        return res.send(500);
+    }
 };
 
 module.exports = {
+    initLocals,
     enqueue,
     dequeue,
-    updateComment,
-    updateLocation,
-    updateStatus,
+    setItem,
 };

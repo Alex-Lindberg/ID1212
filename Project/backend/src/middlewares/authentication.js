@@ -1,4 +1,5 @@
 const { query } = require("../api/db");
+const utils = require("../utils")
 
 const login = async (req, res, next) => {
     try {
@@ -41,18 +42,27 @@ const getSession = async (req, res, next) => {
         );
         if (res.locals?.user && pgResponse?.rows[0]?.session_id) {
             res.locals.user.sessionId = pgResponse.rows[0].session_id
-            return res.status(200).send(res.locals.user);
+            return next()
         } else {
             return res.status(401).send("No session found for user");
         }
     } catch (error) {
+        console.log('error :>> ', error);
         res.sendStatus(500);
     }
 };
+
+const validateSession = (req, res, next) => {
+    const session = utils.getSession(req)
+    if (session === res.locals.user.sessionId && utils.getUser(req).username === res.locals.user.username)  
+        return next()
+    return res.sendStatus(401);
+}
 
 module.exports = {
     login,
     logout,
     validateCredentials,
     getSession,
+    validateSession,
 };

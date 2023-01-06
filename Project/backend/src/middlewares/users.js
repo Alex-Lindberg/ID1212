@@ -9,9 +9,8 @@ const initLocals = (_req, res, next) => {
 };
 
 const getUserByEmail = async (req, res, next) => {
-    const email = req.body.email || utils.getUser(req).email;
-    console.log("userEmail :>> ", email);
     try {
+        const email = req.body.email || utils.getUser(req).email;
         const results = await query(
             `SELECT * FROM users WHERE email='${email}'`
         );
@@ -22,6 +21,7 @@ const getUserByEmail = async (req, res, next) => {
         return res.sendStatus(500);
     }
 };
+
 
 const userExists = (boolean) => (req, res, next) => {
     if (!!res.locals.user !== boolean) {
@@ -34,9 +34,9 @@ const userExists = (boolean) => (req, res, next) => {
 };
 
 const getUser = async (req, res, next) => {
-    const userId = req.params.userId || utils.getUser(req).id;
     try {
-        const results = await query(`SELECT * FROM users WHERE id='${userId}'`);
+        const userId = req.params.userId || utils.getUser(req).id;
+        const results = await query(`SELECT id, username, email, role, created_at FROM users WHERE id='${userId}'`);
         if (results.rows.length === 0)
             return res.status(404).send( `No user found with id ${userId}`);
         else {

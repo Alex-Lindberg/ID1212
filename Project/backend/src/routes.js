@@ -42,6 +42,9 @@ const queueRoutes = (app) => {
     app.post(
         "/api/courses",
         coursesMiddleware.initLocals,
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
         coursesMiddleware.courseExists(false),
         coursesMiddleware.createCourse,
         responseMiddleware.sendResponse("courses")
@@ -49,46 +52,60 @@ const queueRoutes = (app) => {
     app.delete(
         "/api/courses",
         coursesMiddleware.initLocals,
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
         coursesMiddleware.courseExists(true),
         coursesMiddleware.deleteCourse,
         responseMiddleware.sendResponse("courses")
     );
     app.post(
-        "/api/courses/:courseId/enqueue",
-        coursesMiddleware.initLocals,
-        queueMiddleware.enqueue
+        "/api/courses/:courseId/queue",
+        queueMiddleware.initLocals,
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
+        coursesMiddleware.courseExists(true),
+        queueMiddleware.enqueue,
+        responseMiddleware.sendResponse("courses")
     );
-    app.post(
-        "/api/courses/:courseId/dequeue",
+    app.delete(
+        "/api/courses/:courseId/queue",
         coursesMiddleware.initLocals,
-        queueMiddleware.dequeue
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
+        coursesMiddleware.courseExists(true),
+        queueMiddleware.dequeue,
+        responseMiddleware.sendResponse("courses")
     );
-
-    app.put(
-        "/api/courses/:courseId/updateStatus",
+    app.patch(
+        "/api/courses/:courseId/queue/:queueItemId",
         coursesMiddleware.initLocals,
-        queueMiddleware.updateStatus
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
+        // coursesMiddleware.courseExists(true),
+        queueMiddleware.setItem,
+        responseMiddleware.sendResponse("courses")
     );
-    app.put(
-        "/api/courses/:courseId/updateLocation",
-        coursesMiddleware.initLocals,
-        queueMiddleware.updateLocation
-    );
-    app.put(
-        "/api/courses/:courseId/updateComment",
-        coursesMiddleware.initLocals,
-        queueMiddleware.updateComment
-    );
-
     app.get(
         "/api/courses",
         coursesMiddleware.initLocals,
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
+        coursesMiddleware.courseExists(true),
         coursesMiddleware.getCourses,
         responseMiddleware.sendResponse("courses")
     );
     app.get(
         "/api/courses/:courseId",
         coursesMiddleware.initLocals,
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
+        coursesMiddleware.courseExists(true),
         coursesMiddleware.getCourse,
         responseMiddleware.sendResponse("courses")
     );

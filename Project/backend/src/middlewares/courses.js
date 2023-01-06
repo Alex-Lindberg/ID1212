@@ -9,7 +9,7 @@ const initLocals = (_req, res, next) => {
 };
 
 const courseExists = (boolean) => (req, res, next) => {
-    if (!!res.locals.courses !== boolean) {
+    if (!!res.locals.courses !== boolean && getCourse(req).id) {
         if (req.method === "POST" && req.url === "/api/courses") {
             return res.status(303).send(`Course already exists`);
         }

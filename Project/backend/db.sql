@@ -1,4 +1,4 @@
-DROP FUNCTION IF EXISTS new_session, delete_session, register_user;
+DROP FUNCTION IF EXISTS new_session, delete_session, register_user, enqueue, create_course;
 DROP TABLE IF EXISTS users, courses, queue_item, messages, administrators, sessions;
 DROP TYPE IF EXISTS roles, queue_status;
 
@@ -122,6 +122,28 @@ BEGIN
     ON CONFLICT DO NOTHING
     RETURNING
         json_build_object('id', courses.id, 'title', courses.title, 'status', courses.status) INTO course;
+END
+$$
+LANGUAGE plpgsql;
+
+    -- id UUID PRIMARY KEY,
+    -- user_id UUID NOT NULL REFERENCES users (id),
+    -- course_id text NOT NULL REFERENCES courses (id),
+    -- location text,
+    -- comment text,
+    -- status queue_status
+
+CREATE OR REPLACE FUNCTION enqueue(
+    IN user_id UUID, IN course_id text, IN location text, IN comment text, 
+    OUT succeeded BOOLEAN) 
+    RETURNS BOOLEAN
+AS $$ 
+BEGIN
+    INSERT INTO queue_item
+    VALUES (gen_random_uuid(), $1, $2, $3, $4, 'Waiting')
+    ON CONFLICT DO NOTHING
+    RETURNING
+        true INTO succeeded;
 END
 $$
 LANGUAGE plpgsql;
