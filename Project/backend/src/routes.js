@@ -39,26 +39,59 @@ const userRoutes = (app) => {
 };
 
 const queueRoutes = (app) => {
-    app.post("/api/courses/createCourse", coursesMiddleware.createCourse);
-    app.post("/api/courses/deleteCourse", coursesMiddleware.deleteCourse);
-    app.post("/api/courses/:courseId/enqueue", queueMiddleware.enqueue);
-    app.post("/api/courses/:courseId/dequeue", queueMiddleware.dequeue);
+    app.post(
+        "/api/courses",
+        coursesMiddleware.initLocals,
+        coursesMiddleware.courseExists(false),
+        coursesMiddleware.createCourse,
+        responseMiddleware.sendResponse("courses")
+    );
+    app.delete(
+        "/api/courses",
+        coursesMiddleware.initLocals,
+        coursesMiddleware.courseExists(true),
+        coursesMiddleware.deleteCourse,
+        responseMiddleware.sendResponse("courses")
+    );
+    app.post(
+        "/api/courses/:courseId/enqueue",
+        coursesMiddleware.initLocals,
+        queueMiddleware.enqueue
+    );
+    app.post(
+        "/api/courses/:courseId/dequeue",
+        coursesMiddleware.initLocals,
+        queueMiddleware.dequeue
+    );
 
     app.put(
         "/api/courses/:courseId/updateStatus",
+        coursesMiddleware.initLocals,
         queueMiddleware.updateStatus
     );
     app.put(
         "/api/courses/:courseId/updateLocation",
+        coursesMiddleware.initLocals,
         queueMiddleware.updateLocation
     );
     app.put(
         "/api/courses/:courseId/updateComment",
+        coursesMiddleware.initLocals,
         queueMiddleware.updateComment
     );
 
-    app.get("/api/courses", coursesMiddleware.getCourses);
-    app.get("/api/courses/:courseId", coursesMiddleware.getCourse);
+    app.get(
+        "/api/courses",
+        coursesMiddleware.initLocals,
+        coursesMiddleware.getCourses,
+        responseMiddleware.sendResponse("courses")
+    );
+    app.get(
+        "/api/courses/:courseId",
+        coursesMiddleware.initLocals,
+        coursesMiddleware.getCourse,
+        responseMiddleware.sendResponse("courses")
+    );
 };
 
 const init = (app) => {

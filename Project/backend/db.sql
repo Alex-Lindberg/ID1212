@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS courses (
-    id integer PRIMARY KEY,
+    id text PRIMARY KEY,
     title text NOT NULL,
     status integer
 );
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS courses (
 CREATE TABLE IF NOT EXISTS queue_item (
     id UUID PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users (id),
-    course_id integer NOT NULL REFERENCES courses (id),
+    course_id text NOT NULL REFERENCES courses (id),
     location text,
     comment text,
     status queue_status
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS messages (
 
 CREATE TABLE IF NOT EXISTS administrators (
     user_id UUID NOT NULL REFERENCES users (id),
-    courses_id integer NOT NULL REFERENCES courses (id)
+    courses_id text NOT NULL REFERENCES courses (id)
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
@@ -112,3 +112,16 @@ END
 $$
 LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION create_course(
+    IN new_id text, IN new_title text, OUT course json) 
+    RETURNS json
+AS $$ 
+BEGIN
+    INSERT INTO courses
+    VALUES ($1, $2, 0)
+    ON CONFLICT DO NOTHING
+    RETURNING
+        json_build_object('id', courses.id, 'title', courses.title, 'status', courses.status) INTO course;
+END
+$$
+LANGUAGE plpgsql;
