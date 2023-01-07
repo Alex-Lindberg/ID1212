@@ -15,6 +15,7 @@ const userRoutes = (app) => {
     );
     app.post(
         "/api/login",
+        usersMiddleware.initLocals,
         usersMiddleware.getUserByEmail,
         usersMiddleware.userExists(true),
         authMiddleware.validateCredentials,

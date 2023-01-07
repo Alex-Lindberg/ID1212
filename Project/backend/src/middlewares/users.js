@@ -4,13 +4,16 @@ const utils = require("../utils");
 const initLocals = (_req, res, next) => {
     res.locals = {
         user: null,
+        ...res.locals
     };
     return next();
 };
 
 const getUserByEmail = async (req, res, next) => {
     try {
+        console.log('req.headers :>> ', req.headers);
         const email = req.body.email || utils.getUser(req).email;
+        console.log('email :>> ', email);
         const results = await query(
             `SELECT * FROM users WHERE email='${email}'`
         );

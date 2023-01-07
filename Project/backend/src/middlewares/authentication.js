@@ -1,5 +1,5 @@
 const { query } = require("../api/db");
-const utils = require("../utils")
+const utils = require("../utils");
 
 const login = async (req, res, next) => {
     try {
@@ -16,14 +16,17 @@ const login = async (req, res, next) => {
     }
 };
 
-const logout = async (req, res) => {
+const logout = async (req, res, next) => {
     try {
         const pgResponse = await query(
             `SELECT delete_session('${res.locals.user.id}'::UUID)`
         );
-        if (!pgResponse.rows[0].delete_session) return res.sendStatus(404);
-        return res.sendStatus(302);
+        if (!pgResponse.rows[0].delete_session) {
+            return res.sendStatus(404);
+        }
+        return next();
     } catch (error) {
+        console.log('error :>> ', error);
         res.sendStatus(500);
     }
 };
@@ -41,23 +44,26 @@ const getSession = async (req, res, next) => {
             `SELECT session_id FROM sessions WHERE '${res.locals.user.id}'=user_id`
         );
         if (res.locals?.user && pgResponse?.rows[0]?.session_id) {
-            res.locals.user.sessionId = pgResponse.rows[0].session_id
-            return next()
+            res.locals.user.sessionId = pgResponse.rows[0].session_id;
+            return next();
         } else {
             return res.status(401).send("No session found for user");
         }
     } catch (error) {
-        console.log('error :>> ', error);
+        console.log("error :>> ", error);
         res.sendStatus(500);
     }
 };
 
 const validateSession = (req, res, next) => {
-    const session = utils.getSession(req)
-    if (session === res.locals.user.sessionId && utils.getUser(req).username === res.locals.user.username)  
-        return next()
+    const session = utils.getSession(req);
+    if (
+        session === res.locals.user.sessionId &&
+        utils.getUser(req).username === res.locals.user.username
+    )
+        return next();
     return res.sendStatus(401);
-}
+};
 
 module.exports = {
     login,
