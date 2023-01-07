@@ -1,4 +1,5 @@
 const { query } = require("../api/db");
+const { getUser } = require("../utils");
 const utils = require("../utils");
 
 const initLocals = (_req, res, next) => {
@@ -9,7 +10,6 @@ const initLocals = (_req, res, next) => {
 };
 
 const courseExists = (boolean) => (req, res, next) => {
-    console.log("req.body :>> ", req.body);
     if (!!res.locals.courses !== boolean && !!req.body.courseId !== boolean) {
         if (req.method === "POST" && req.url === "/api/courses") {
             return res.status(303).send(`Course already exists`);
@@ -39,14 +39,14 @@ const createCourse = async (req, res, next) => {
 
 const setCourseAdministrator = (boolean) => async (req, res, next) => {
     try {
-        console.log('res.body :>> ', req.body);
+        const user = getUser(req) || res.locals.user || null
         if (boolean) {
             await query(
-                `INSERT INTO administrators VALUES ('${req.body.userId}', '${req.body.courseId}')`
+                `INSERT INTO administrators VALUES ('${user.id}', '${req.body.courseId}')`
             );
         } else if (!boolean) {
             await query(
-                `DELETE FROM administrators WHERE course_id='${req.body.courseId}' AND user_id='${req.body.userId}'`
+                `DELETE FROM administrators WHERE course_id='${req.body.courseId}' AND user_id='${user.id}'`
             );
         }
         return next();
@@ -58,22 +58,22 @@ const setCourseAdministrator = (boolean) => async (req, res, next) => {
 
 const isAdministrator = async (req, res, next) => {
     try {
-        const user = res.locals.user.id || utils.getUser(req)?.id || null;
-        if (user?.role === "administrator") return next();
+        const user = res.locals.user || utils.getUser(req) || null;
+        if (user?.role === "admin") return next();
         const pgResponse = await query(
-            `SELECT * FROM administrators WHERE user_id='${user}' AND course_id='${req.body.courseId}'`
+            `SELECT * FROM administrators WHERE user_id='${user.id}' AND course_id='${req.body.courseId}'`
         );
         if (pgResponse?.rows?.length > 0) return next();
+        
         return res.sendStatus(403);
     } catch (error) {
-        console.log("error :>> ", error);
+        console.error("error :>> ", error);
         return res.sendStatus(500);
     }
 };
 
 const deleteCourse = async (req, res, next) => {
     try {
-        console.log("req.body.courseId :>> ", req.body.courseId);
         await query(
             `DELETE FROM queue_item WHERE course_id='${req.body.courseId}'`
         );
@@ -83,7 +83,7 @@ const deleteCourse = async (req, res, next) => {
         await query(`DELETE FROM courses WHERE id='${req.body.courseId}'`);
         return next();
     } catch (error) {
-        console.log("error :>> ", error);
+        console.error("error :>> ", error);
         return res.sendStatus(500);
     }
 };

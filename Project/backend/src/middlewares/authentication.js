@@ -50,7 +50,7 @@ const getSession = async (req, res, next) => {
             return res.status(401).send("No session found for user");
         }
     } catch (error) {
-        console.log("error :>> ", error);
+        console.error("error :>> ", error);
         res.sendStatus(500);
     }
 };

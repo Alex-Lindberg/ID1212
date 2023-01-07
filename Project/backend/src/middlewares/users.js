@@ -11,16 +11,14 @@ const initLocals = (_req, res, next) => {
 
 const getUserByEmail = async (req, res, next) => {
     try {
-        console.log('req.headers :>> ', req.headers);
         const email = req.body.email || utils.getUser(req).email;
-        console.log('email :>> ', email);
         const results = await query(
             `SELECT * FROM users WHERE email='${email}'`
         );
         res.locals.user = results.rows.length > 0 ? results.rows[0] : null;
         return next();
     } catch (error) {
-        console.log("error :>> ", error);
+        console.error("error :>> ", error);
         return res.sendStatus(500);
     }
 };
@@ -47,7 +45,7 @@ const getUser = async (req, res, next) => {
             return next();
         }
     } catch (error) {
-        console.log("error :>> ", error);
+        console.error("error :>> ", error);
         return res.sendStatus(500);
     }
 };

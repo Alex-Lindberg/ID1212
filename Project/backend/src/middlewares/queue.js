@@ -11,8 +11,6 @@ const initLocals = (_req, res, next) => {
 
 const enqueue = async (req, res, next) => {
     try {
-        const session = getSession(req);
-        console.log("session :>> ", session);
         const succeeded = await query(
             `SELECT enqueue(
                 '${res.locals.user.id}'::UUID,
@@ -22,7 +20,7 @@ const enqueue = async (req, res, next) => {
         );
         return next();
     } catch (error) {
-        console.log("error :>> ", error);
+        console.error("error :>> ", error);
         return res.sendStatus(500);
     }
 };
@@ -30,7 +28,7 @@ const enqueue = async (req, res, next) => {
 const dequeue = async (req, res, next) => {
     try {
     } catch (error) {
-        console.log("error :>> ", error);
+        console.error("error :>> ", error);
         return res.send(500);
     }
 };
@@ -49,7 +47,7 @@ const setItem = async (req, res, next) => {
         );
         return next();
     } catch (error) {
-        console.log("error :>> ", error);
+        console.error("error :>> ", error);
         return res.send(500);
     }
 };
