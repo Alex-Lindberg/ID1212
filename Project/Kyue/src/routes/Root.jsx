@@ -1,29 +1,19 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import LoginForm from "../components/LoginForm";
 import LogoutButton from "../components/LogoutButton";
 
-import "./Root.css";
+import "../index.css";
 
 function Root() {
     const location = useLocation();
-    //@ts-ignore
     const user = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
-        //@ts-ignore
         const user = JSON.parse(localStorage.getItem("user"));
-        console.log('location.pathname :>> ', location.pathname);
-        if (
-            (location.pathname === "/login" ||
-                location.pathname === "/signup") &&
-            user
-        ) {
+        if (location.pathname === "/login" && user) {
             window.location.pathname = "/home";
-        } else if (
-            location.pathname !== "login" &&
-            location.pathname !== "/signup" &&
-            !user
-        ) {
+        } else if (location.pathname !== "login" && !user) {
             window.location.pathname = "/login";
         }
     }, [user, location.pathname]);

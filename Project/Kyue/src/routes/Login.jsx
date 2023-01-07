@@ -3,15 +3,15 @@ import "./Login.css";
 
 const Login = (props) => {
     return (
-        <section>
-            <h1>Kyue</h1>
-            <div className="login-wrapper">
-                <div className="login-content">
-                    <LoginForm />
-                    <hr />
-                </div>
+        <main className="login-page">
+            <div className="background">
+                <div className="shape"></div>
+                <div className="shape"></div>
+                <div className="shape"></div>
+                <div className="shape"></div>
             </div>
-        </section>
+            <LoginForm />
+        </main>
     );
 };
 

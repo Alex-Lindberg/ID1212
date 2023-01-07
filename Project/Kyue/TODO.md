@@ -2,6 +2,8 @@
 - [x] Authentication
     - [x] Registrera
     - [x] Login
+        - [x] backend
+        - [x] frontend
     - [x] Login redirect
 
 - [ ] Session
@@ -10,13 +12,26 @@
 
 - [ ] Queue
     - [x] Hämta Kurs
-    - [ ] Lägga kommentar (Message)
-    - [ ] Lägga kommentar
-    - [ ] Lägga kommentar
+        - [x] backend
+        - [ ] frontend
+    - [x] Uppdatera QI kommentar
+        - [x] backend
+        - [ ] frontend
+    - [x] Updatera QI status
+        - [x] backend
+        - [ ] frontend
+    - [x] Updatera QI location
+        - [x] backend
+        - [ ] frontend
+    - [ ] Antal personer i queue
+        - [ ] backend
+        - [ ] frontend
     
 - [ ] Admin (Lärare)
     - [x] Skapa kurs/queue
+        - [x] backend
+        - [ ] frontend
     - [x] Ta bort
+        - [x] backend
+        - [ ] frontend
     - [ ] Gå in i queue
-    - [ ] Put status
-    - [ ] 

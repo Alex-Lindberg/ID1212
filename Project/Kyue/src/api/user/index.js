@@ -2,15 +2,20 @@ import axios from "axios";
 
 export const register = (user) => {
     try {
-        const user = localStorage.getItem("user");
         const config = {
             headers: {
                 "Content-Type": "application/json",
             },
         };
-        return axios.post("http://localhost:3000/api/users", user, config);
+        return axios
+            .post("http://localhost:3000/api/users", user, config)
+            .then(({ data }) => {
+                console.log('data :>> ', data);
+                if (!data.register_user) console.error("Failed to register user");
+                else return true;
+            }).catch(console.error);
     } catch (error) {
-        console.log("error :>> ", error);
+        console.error("Failed to register user");
     }
 };
 
@@ -49,10 +54,11 @@ export const logout = async () => {
             .then(() => {
                 localStorage.removeItem("user");
                 window.location.pathname = "/login";
-                console.log('Removed');
-            }).catch((error) => {
-                console.error(error);
+                console.log("Removed");
             })
+            .catch((error) => {
+                console.error(error);
+            });
     } catch (error) {
         console.error(error);
     }

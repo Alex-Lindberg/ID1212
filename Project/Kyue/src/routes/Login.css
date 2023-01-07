@@ -1,54 +1,68 @@
-section {
-    display: flex;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    flex-direction: column;
-    flex: 1;
-    font-size: large;
-    background: linear-gradient(130deg, orange 5%, rgb(149, 0, 107) 100%);
-}
-
-section h1 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.login-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.login-page {
     height: 100%;
-    width: 100%;
-    margin: auto;
-    max-width: 500px;
-    position: relative;
+    background: var(--bg-0);
+    overflow:hidden;
+    max-height: 100vh;
 }
 
-.login-content {
-    width: 100%;
-    min-height: 28em;
-    height: 70%;
-    background-color: var(--bg-3);
-    background-position: 0% 0%;
-    background-size: 300% 300%;
-    z-index: 2;
-    border: 0.5px solid var(--bg-1);
-    border-radius: 1%;
-    box-shadow: rgba(0, 0, 0, 0.06) 0px 6px 9px;
-    transition: background-position 500ms ease-in-out,
-        box-shadow 500ms ease-in-out;
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+.background .shape{
+    position: absolute;
+    border-radius: 50%;
+    transition: transform  2.5s ease-in-out;
+}
+.shape:nth-child(1){
+    height: 300px;
+    width: 300px;
+    background: linear-gradient(
+        hsl(0, 87%, 45%),
+        hsl(255, 60%, 44%)
+    );
+    left: -155px;
+    top: -155px;
+}
+.shape:nth-child(2){
+    height: 300px;
+    width: 300px;
+    background: linear-gradient(
+        to right,
+        hsl(36, 100%, 59%),
+        hsl(16, 97%, 55%)
+    );
+    right: -135px;
+    bottom: -165px;
+}
+.shape:nth-child(3){
+    position: absolute;
+    background: linear-gradient(
+        to top right,
+        var(--bg-0),
+        hsl(9, 60%, 44%)
+    );
+    height: 400px;
+    width: 400px;
+    transform: translate(200%,-100%);
+}
+.shape:nth-child(4){
+    position: absolute;
+    background: linear-gradient(
+        to bottom left,
+        var(--bg-0),
+        hsl(255, 57%, 32%)
+    );
+    height: 800px;
+    width: 800px;
+    transform: translate(-120%,50%);
 }
 
-.login-content:hover {
-    background-position: 100% 100%;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 26px;
-    transform: translate3d(-0.5px, -0.5px, 0px);
-}
-
-hr {
-    max-width: 80%;
-    margin-top: 3em;
-    margin-bottom: 3em;
+.shape:nth-child(1):hover, .shape:nth-child(2):hover {
+    transform: scale(1.05);
+    transition: transform  1.2s ease-in-out;
 }
