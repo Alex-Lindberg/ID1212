@@ -141,6 +141,25 @@ END
 $$
 LANGUAGE plpgsql;
 
+-- related trigger:
+CREATE OR REPLACE FUNCTION notify_queue_item_event()
+    RETURNS trigger
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+    PERFORM pg_notify('new_query_item_event', row_to_json(NEW)::text);
+    RETURN NULL;
+END;
+$$
+
+-- ##########
+--  TRIGGERS
+-- ##########
+
+-- change from insert to also include patch events somehow
+CREATE TRIGGER update_queue_item_trigger AFTER INSERT ON queue_item
+FOR EACH ROW EXECUTE PROCEDURE notify_queue_item_event();
+
 -- ##########
 --  DEFAULTS
 -- ##########
