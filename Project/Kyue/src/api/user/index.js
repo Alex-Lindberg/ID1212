@@ -32,7 +32,7 @@ export const login = async (user) => {
             .then(({ data }) => {
                 if (!data) console.error("Failed to retrieve user");
                 localStorage.setItem("user", JSON.stringify(data));
-                window.location.pathname = "/home";
+                window.location.pathname = "/courses";
                 return data;
             });
     } catch (error) {

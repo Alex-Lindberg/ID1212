@@ -4,7 +4,8 @@
         Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     --font-mono: "Fira Mono", monospace;
     --bg-0: rgb(52, 46, 42);
-    --bg-1: rgba(54, 48, 48, 50%);
+    --bg-1: rgba(52, 46, 42, 40%);
+    --bg-2: rgb(40, 34, 30);
     --bg-grad: linear-gradient(130deg, orange 5%, rgb(149, 0, 107) 100%);
     --text: rgba(255, 255, 255, 0.8);
     --font-size-0: 16px;
@@ -13,21 +14,27 @@
     --line-h-1: 28px;
     --font-size-2: 36px;
     --line-h-2: 40px;
+    --font-size-3: 52px;
+    --line-h-3: 58px;
 
-    /* Defaults  */
+    /* --- Defaults --- */
+
+    /* Colors */
     font-family: var(--font-body);
     color: var(--text);
+    background-color: var(--bg-0);
 
+    /* Fonts */
     font-size: var(--font-size-0);
     line-height: var(--line-h-0);
     font-weight: 400;
-    overflow: hidden;
-
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+
+    /* overflow: hidden; */
 }
 
 *,
@@ -36,11 +43,6 @@ body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-}
-
-body, .root, #root {
-    height: 100vh;
-    min-height: 100vh;
 }
 
 h1 {

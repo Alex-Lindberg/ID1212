@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono");
+
+.error-page {
+    position: relative;
+    font-family: "Roboto Mono";
+    font-size: var(--font-size-0);
+    font-size: var(--line-h-0);
+    height: 100%;
+    /* width: 100%; */
+}
+
+/* SHAPE */
+
+.error-page > .background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.error-page > .background > .shape {
+    position: relative;
+    border-radius: 50%;
+    min-width: 400px;
+    height: 400px;
+    background: linear-gradient(var(--bg-0), hsl(44, 69%, 54%));
+}
+
+/* CONTENT */
+
+.content-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: 1s ease-out 0s 1 slideInTop;
+}
+
+.err-code-wrapper,
+.err-status-wrapper,
+.err-data-wrapper {
+    margin: 1rem 0;
+}
+
+.err-code-wrapper {
+    display: flex;
+    justify-content: center;
+}
+.err-code {
+    font-size: var(--font-size-3);
+    line-height: var(--line-h-3);
+    border-bottom: 3px solid white;
+    padding-bottom: 1rem;
+}
+.err-status {
+    font-size: var(--font-size-1);
+}
+
+.text-wrapper {
+    border-radius: 2%;
+    padding: 2em 1em;
+
+    background-color: rgba(100, 100, 100, 0.4);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+}
+
+@keyframes slideInTop {
+    0% {
+        transform: translate(-50%, -70%);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        backdrop-filter: blur(10px);
+    }
+}

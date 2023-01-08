@@ -1,22 +1,35 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+    createBrowserRouter,
+    RouterProvider,
+    redirect,
+} from "react-router-dom";
+import { Provider } from "react-redux";
 import Root from "./routes/Root";
-import "./index.css";
 import ErrorPage from "./errorPage";
 import { Login } from "./routes";
-import { Provider } from "react-redux";
-import store from "./store";
 import { validateUser } from "./api/user";
+import store from "./store";
+import Queue from "./routes/Queue";
+import "./index.css";
 
 const router = createBrowserRouter(
     [
         {
-            path: "/home",
+            path: "/",
             element: <Root />,
             loader: async () => {
-                return validateUser()
+                return validateUser().catch(() => {
+                    redirect("/login");
+                });
             },
+            children: [
+                {
+                    path: "/:courseId",
+                    element: <Queue />,
+                },
+            ],
         },
         {
             path: "/login",
@@ -24,6 +37,12 @@ const router = createBrowserRouter(
         },
     ].map((route) => {
         // default elements
+        if (route.children) {
+            route.children.map((child) => {
+                if (child.errorElement) return child;
+                return { ...child, errorElement: <ErrorPage /> };
+            });
+        }
         if (route.errorElement) return route;
         return { ...route, errorElement: <ErrorPage /> };
     })
