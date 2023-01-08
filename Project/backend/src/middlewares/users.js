@@ -36,7 +36,8 @@ const userExists = (boolean) => (req, res, next) => {
 
 const getUser = async (req, res, next) => {
     try {
-        const userId = req.params.userId || utils.getUser(req).id;
+        if (req?.headers?.user === 'null') return res.sendStatus(400)
+        const userId = req.body?.user?.id || utils.getUser(req).id;
         const results = await query(`SELECT id, username, email, role, created_at FROM users WHERE id='${userId}'`);
         if (results.rows.length === 0)
             return res.status(404).send( `No user found with id ${userId}`);

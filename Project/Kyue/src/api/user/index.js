@@ -1,4 +1,5 @@
 import axios from "axios";
+import useUserState from "../../hooks/useUserState";
 
 export const register = (user) => {
     try {
@@ -32,6 +33,28 @@ export const login = async (user) => {
                 if (!data) console.error("Failed to retrieve user");
                 localStorage.setItem("user", JSON.stringify(data));
                 window.location.pathname = "/home";
+                return data;
+            });
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export const validateUser = async () => {
+    try {
+        const user = useUserState()?.user?.currentUser
+        if(!user)
+            window.location.pathname = "/login";
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                user: JSON.stringify(user),
+            },
+        };
+        return await axios
+            .get("http://localhost:3000/api/users/session", config)
+            .then(({ data }) => {
+                localStorage.setItem("user", JSON.stringify(data));
                 return data;
             });
     } catch (error) {

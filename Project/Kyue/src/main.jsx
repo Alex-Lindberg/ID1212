@@ -6,13 +6,17 @@ import "./index.css";
 import ErrorPage from "./errorPage";
 import { Login } from "./routes";
 import { Provider } from "react-redux";
-import store from "./store"
+import store from "./store";
+import { validateUser } from "./api/user";
 
 const router = createBrowserRouter(
     [
         {
             path: "/home",
-            element: <Root />
+            element: <Root />,
+            loader: async () => {
+                return validateUser()
+            },
         },
         {
             path: "/login",

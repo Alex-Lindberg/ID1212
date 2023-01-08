@@ -29,12 +29,20 @@ const userRoutes = (app) => {
         authMiddleware.logout,
         responseMiddleware.sendResponse("user")
     );
-
     app.get(
         "/api/users/:userId",
         usersMiddleware.initLocals,
         usersMiddleware.getUser,
         authMiddleware.getSession,
+        authMiddleware.validateSession,
+        responseMiddleware.sendResponse("user")
+    );
+    app.get(
+        "/api/users/session",
+        usersMiddleware.initLocals,
+        usersMiddleware.getUser,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
         responseMiddleware.sendResponse("user")
     );
 };

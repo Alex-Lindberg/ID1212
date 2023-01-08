@@ -13,7 +13,7 @@ module.exports = {
 		try {
 			await pool.connect();
 		} catch (error) {
-			console.log('Failed to connect', error);
+			console.error('Failed to connect', error);
 		}
     },
     query: async (sql) => {
