@@ -1,10 +1,9 @@
+import { redirect } from "react-router-dom";
 import { useRouteError } from "react-router-dom";
 import "./errorPage.css";
 
 export default function ErrorPage() {
     const error = useRouteError();
-    console.log("error :>> ", error);
-
     return (
         <main className="error-page">
             <div className="background">
@@ -16,7 +15,7 @@ export default function ErrorPage() {
                         {error.status || "Code: ?"}
                     </span>
                 </div>
-                <div className="text-wrapper">
+                <div className="text-wrapper" >
                     <div className="err-status">
                         <span className="err-status">
                             {error.statusText || "Text: ?"}
@@ -27,6 +26,7 @@ export default function ErrorPage() {
                             {error.data || "Unknown"}
                         </span>
                     </div>
+                <button className="home-button" onClick={()=>(window.location.pathname = "/")}>{"> Home"}</button>
                 </div>
             </section>
         </main>
