@@ -5,22 +5,27 @@ import useUserState from "../hooks/useUserState";
 import "../index.css";
 import "./Root.css";
 import Searchbar from "../components/Searchbar";
+import useCourseState from "../hooks/useCourseState";
 
 const Root = () => {
     const location = useLocation();
-    // const user = JSON.parse(localStorage.getItem("user"));
-    const user = useUserState()?.user;
+
+    const { user } = useUserState();
+    const { courses } = useCourseState();
 
     useEffect(() => {
-        // const user = JSON.parse(localStorage.getItem("user"));
         if (location.pathname === "/login" && user?.isAuthenticated) {
-            window.location.pathname = "/courses";
+            window.location.pathname = "/";
         } else if (location.pathname !== "login" && !user?.isAuthenticated) {
             window.location.pathname = "/login";
         }
     }, [user, location.pathname]);
 
-
+    useEffect(() => {
+        courses.fetchCourses()
+    }, []);
+    if(!courses.courses)
+        return (<div>text</div>)
     return (
         <div style={{ position: "relative" }} className="root-page">
             <Navbar username={user.currentUser.username} />
@@ -29,14 +34,21 @@ const Root = () => {
                 <Searchbar />
             </div>
             <div id="course-list-wrapper">
-                {[...Array(10).keys()].map((i) => {
-                    return (
-                        <div key={i} className="course-item">
-                            <p>Lots of rows of text</p>
-                            <p>Lots of rows of text</p>
-                        </div>
-                    );
-                })}
+                {courses.courses !== undefined || courses.courses !== null ? (
+                    courses?.courses.map((course, i) => {
+                        return (
+                            <div key={i} className="course-item">
+                                <div>
+                                    <span>{course.id}</span>
+                                    <span>{course.title}</span>
+                                </div>
+                                <div>{course.status}</div>
+                            </div>
+                        );
+                    })
+                ) : (
+                    <div>Error</div>
+                )}
             </div>
             <div className="footer-wrapper">
                 <footer className="page-footer">

@@ -1,5 +1,6 @@
 import { userActions } from "../reducers/userReducer";
 import store from ".";
+import { courseActions, fetchCourses } from "../reducers/courseReducer";
 
 const storeInterface = {
     user: {
@@ -23,6 +24,17 @@ const storeInterface = {
             store.dispatch(userActions.logout());
         },
     },
+    courses: {
+        get courses() {
+            return store.getState().courseState.courses
+        },
+        setCourses: (courses) => {
+            return store.dispatch(courseActions.setCourses(courses))
+        },
+        fatchCourses: () => {
+            return store.dispatch(fetchCourses())
+        }
+    }
 };
 
 export default storeInterface;

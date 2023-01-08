@@ -21,7 +21,7 @@ const router = createBrowserRouter(
             element: <Root />,
             loader: async () => {
                 return validateUser().catch(() => {
-                    redirect("/login");
+                    return redirect("/login");
                 });
             },
             children: [
@@ -38,7 +38,7 @@ const router = createBrowserRouter(
     ].map((route) => {
         // default elements
         if (route.children) {
-            route.children.map((child) => {
+            route.children = route.children.map((child) => {
                 if (child.errorElement) return child;
                 return { ...child, errorElement: <ErrorPage /> };
             });

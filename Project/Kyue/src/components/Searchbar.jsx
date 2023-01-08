@@ -11,6 +11,7 @@ const Searchbar = () => {
                 className="searchQueryInput"
                 placeholder="Search"
                 value=""
+                readOnly // remove later 
             />
             <button
                 id="searchQuerySubmit"
