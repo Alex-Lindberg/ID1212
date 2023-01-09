@@ -1,36 +1,33 @@
 package App;
 
-
 public class GameModel {
-    private final int secretNumber;
-    private int numberOfGuesses;
-    private boolean isGameOver = false;
+    private boolean finished = false;
+    private int guesses = 0;
+    private int secret;
 
     public GameModel() {
-        secretNumber = (int) (Math.random() * 100);
-        numberOfGuesses = 0;
-        System.out.println("Secret number: " + secretNumber);
+        this.secret = (int) (Math.random() * 100);
+        System.out.println("Secret number: " + secret);
     }
 
     public String guess(int guess) {
-        numberOfGuesses++;
-        if (guess == secretNumber) {
-            this.isGameOver = true;
-            return "You made it!!! \n The secret number was " + secretNumber + " and you guessed it in "
-                    + numberOfGuesses + " guesses";
-        } else if (guess > secretNumber) {
-            return "Nope, guess lower";
-        } else {
-            return "Nope, guess higher";
+        guesses++;
+        if (guess == this.secret) {
+            this.finished = true;
+            return String.format("You made it in %d guesses!!!", guesses);
         }
+        if (guess < this.secret)
+            return String.format("Wrong, Guess higher! You have made %d guess(es)", guesses);
+        else
+            return String.format("Wrong, Guess lower! You have made %d guess(es)", guesses);
     }
 
     public int getNumberOfGuesses() {
-        return numberOfGuesses;
+        return guesses;
     }
 
     public boolean isGameOver() {
-        return this.isGameOver;
+        return this.finished;
     }
 
     public String getWelcomeMessage() {

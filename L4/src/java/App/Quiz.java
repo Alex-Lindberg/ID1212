@@ -15,10 +15,10 @@ import java.util.ArrayList;
 @WebServlet(name = "quiz", value = "/quiz")
 public class Quiz extends HttpServlet {
 
-    private final QuizDAO kuizDAO;
+    private final QuizDAO quizDAO;
 
     public Quiz() throws SQLException {
-        kuizDAO = new QuizDAO();
+        quizDAO = new QuizDAO();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -26,7 +26,7 @@ public class Quiz extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("quiz_id", request.getParameter("quiz_id"));
         try {
-            ArrayList<Question> quizList = kuizDAO.getQuizQuestions(Integer.parseInt(request.getParameter("quiz_id")));
+            ArrayList<Question> quizList = quizDAO.getQuizQuestions(Integer.parseInt(request.getParameter("quiz_id")));
             request.setAttribute("quizList", quizList);
             request.getRequestDispatcher("/quiz.jsp").forward(request, response);
         } catch (SQLException e) {
@@ -41,11 +41,11 @@ public class Quiz extends HttpServlet {
         try {
             String[] answers = { "q1", "q2", "q3", "q4" };
             int score = 0;
-            for (String answer : answers)
+            for (String answer : answers) {
                 if (request.getParameter(answer).equals("true"))
                     score++;
-
-            kuizDAO.updateUserScore(score, userId, quizId);
+            }
+            quizDAO.updateUserScore(score, userId, quizId);
             request.getRequestDispatcher("/").forward(request, response);
         } catch (Exception e) {
             throw new RuntimeException(e);

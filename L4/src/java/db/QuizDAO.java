@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package db;
+
 import App.Question;
 import java.sql.*;
 import java.util.*;
@@ -11,9 +12,12 @@ import java.util.*;
 public class QuizDAO {
 
     private final String DATABASE_URL = "jdbc:postgresql://localhost:5432/test?user=alex&password=pass";
+    private final String USERNAME = "alex";
+    private final String PASSWORD = "pass";
+
     private Connection connection;
 
-    private PreparedStatement checkIfUserExists;
+    private PreparedStatement validateUser;
     private PreparedStatement getUserId;
     private PreparedStatement getUserScore;
     private PreparedStatement getQuizQuestions;
@@ -22,73 +26,17 @@ public class QuizDAO {
     public QuizDAO() throws SQLException {
         try {
             connect();
-        } catch (Exception e) {
-            throw new SQLException("Connection to database failed", e);
+        } catch (SQLException error) {
+            throw new SQLException("Connection to database failed", error);
         }
     }
 
     private void connect() throws SQLException {
         Properties properties = new Properties();
-        properties.setProperty("alex", "pass");
+        properties.setProperty(USERNAME, PASSWORD);
         connection = DriverManager.getConnection(DATABASE_URL, properties);
         connection.setAutoCommit(false);
         preparedStatements();
-    }
-
-    public boolean userAuthenticated(String username, String password) throws SQLException {
-        try {
-            checkIfUserExists.setString(1, username);
-            checkIfUserExists.setString(2, password);
-            return checkIfUserExists.executeQuery().next();
-        } catch (SQLException throwable) {
-            throw new SQLException("Could not check if user exists", throwable);
-        }
-    }
-
-    public HashMap<String, Integer> getUserScores(int userId) throws SQLException {
-        HashMap<String, Integer> userScores = new HashMap<>();
-        try {
-            getUserScore.setInt(1, userId);
-            ResultSet queryResults = getUserScore.executeQuery();
-            while (queryResults.next()) {
-                userScores.put(queryResults.getString("quiz_id"), queryResults.getInt("score"));
-            }
-            return userScores;
-        } catch (SQLException throwable) {
-            throw new SQLException("Could not get user score", throwable);
-        }
-    }
-
-    public ArrayList<Question> getQuizQuestions(int quizId) throws SQLException {
-        ArrayList<Question> questions = new ArrayList<>();
-        try {
-            getQuizQuestions.setInt(1, quizId);
-            getQuizQuestions.setInt(2, quizId);
-            ResultSet queryResults = getQuizQuestions.executeQuery();
-            while (queryResults.next()) {
-                questions.add(new Question(
-                        queryResults.getString("text"),
-                        queryResults.getString("answer"),
-                        queryResults.getString("options"),
-                        queryResults.getString("id")));
-            }
-            return questions;
-        } catch (SQLException throwable) {
-            throw new SQLException("Could not get quiz questions", throwable);
-        }
-    }
-
-    public int getUserId(String username) throws SQLException {
-        try {
-            getUserId.setString(1, username);
-            ResultSet queryResults = getUserId.executeQuery();
-            if (queryResults.next()) {
-                return queryResults.getInt("id");
-            }
-            return 0;
-        } catch (SQLException throwable) {
-            throw new SQLException("Could not get user id", throwable);
-        }
     }
 
     public void updateUserScore(int points, int user_id, int quiz_id) throws SQLException {
@@ -105,7 +53,7 @@ public class QuizDAO {
 
     private void preparedStatements() throws SQLException {
         try {
-            checkIfUserExists = connection.prepareStatement(
+            validateUser = connection.prepareStatement(
                     "SELECT * FROM users WHERE username = ? AND password = ?");
 
             getUserId = connection.prepareStatement(
@@ -127,8 +75,67 @@ public class QuizDAO {
                             "SET score =  ? " +
                             "WHERE user_id = ? AND quiz_id = ?");
 
-        } catch (SQLException throwable) {
-            throw new SQLException("Could not prepare statements", throwable);
+        } catch (SQLException error) {
+            throw new SQLException("Could not prepare statements", error);
         }
     }
+
+    public boolean userAuthenticated(String username, String password) throws SQLException {
+        try {
+            validateUser.setString(1, username);
+            validateUser.setString(2, password);
+            return validateUser.executeQuery().next();
+        } catch (SQLException error) {
+            throw new SQLException("Could not check if user exists", error);
+        }
+    }
+
+    // Getters
+
+    public HashMap<String, Integer> getUserScores(int userId) throws SQLException {
+        HashMap<String, Integer> userScores = new HashMap<>();
+        try {
+            getUserScore.setInt(1, userId);
+            ResultSet queryResults = getUserScore.executeQuery();
+            while (queryResults.next()) {
+                userScores.put(queryResults.getString("quiz_id"), queryResults.getInt("score"));
+            }
+            return userScores;
+        } catch (SQLException error) {
+            throw new SQLException("Could not get user score", error);
+        }
+    }
+
+    public ArrayList<Question> getQuizQuestions(int quizId) throws SQLException {
+        ArrayList<Question> questions = new ArrayList<>();
+        try {
+            getQuizQuestions.setInt(1, quizId);
+            getQuizQuestions.setInt(2, quizId);
+            ResultSet queryResults = getQuizQuestions.executeQuery();
+            while (queryResults.next()) {
+                questions.add(new Question(
+                        queryResults.getString("text"),
+                        queryResults.getString("answer"),
+                        queryResults.getString("options"),
+                        queryResults.getString("id")));
+            }
+            return questions;
+        } catch (SQLException error) {
+            throw new SQLException("Could not get quiz questions", error);
+        }
+    }
+
+    public int getUserId(String username) throws SQLException {
+        try {
+            getUserId.setString(1, username);
+            ResultSet queryResults = getUserId.executeQuery();
+            if (queryResults.next()) {
+                return queryResults.getInt("id");
+            }
+            return 0;
+        } catch (SQLException error) {
+            throw new SQLException("Could not get user id", error);
+        }
+    }
+
 }

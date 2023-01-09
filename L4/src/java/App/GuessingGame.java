@@ -1,6 +1,5 @@
 package App;
 
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,21 +9,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
-// import java.io.PrintWriter;
-
 
 /**
  * @author Alex Lindberg
  * @created 2022-12-27
  */
 
-
 @WebServlet(name = "guessing-game", value = "/guessing-game")
 
 public class GuessingGame extends HttpServlet {
 
-
     private GameModel model;
+
     private HttpSession getSession(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         if (session == null) {
@@ -35,6 +31,7 @@ public class GuessingGame extends HttpServlet {
         System.out.println("Session id: " + session.getId());
         return session;
     }
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = getSession(request, response);
 
@@ -45,7 +42,9 @@ public class GuessingGame extends HttpServlet {
             model = (GameModel) session.getAttribute("model");
             if (model.isGameOver()) {
                 System.out.println("Game is over");
-                model = new GameModel();
+                session.removeAttribute("model");
+                request.getRequestDispatcher("/").forward(request, response);
+                return;
             }
         }
         // serve the jsp page
@@ -56,13 +55,13 @@ public class GuessingGame extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = getSession(request, response);
-        if (model.isGameOver()) {
-            System.out.println("Game is over");
-            model = new GameModel();
-        }
         String hintMessage = model.guess(Integer.parseInt(request.getParameter("guess")));
         request.setAttribute("hintMessage", hintMessage);
         request.setAttribute("numberOfGuesses", model.getNumberOfGuesses());
+        if (model.isGameOver()) {
+            session.removeAttribute("model");
+            request.setAttribute("gameOverMessage", "Game over!");
+        }
         RequestDispatcher view = request.getRequestDispatcher("/guessing-game.jsp");
         view.forward(request, response);
     }

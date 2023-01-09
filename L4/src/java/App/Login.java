@@ -1,30 +1,26 @@
 package App;
 
+import db.QuizDAO;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import db.QuizDAO;
-import javax.servlet.http.HttpSession;
-
 @WebServlet(name = "login", value = "/login")
 
 public class Login extends HttpServlet {
 
-    private final QuizDAO kuizDAO;
+    private final QuizDAO quizDAO;
 
     public Login() throws SQLException {
-        kuizDAO = new QuizDAO();
-    }
-
-    private HttpSession getSession(HttpServletRequest request, HttpServletResponse response) {
-        return getHttpSession(request, response);
+        quizDAO = new QuizDAO();
     }
 
     static HttpSession getHttpSession(HttpServletRequest request, HttpServletResponse response) {
@@ -46,23 +42,23 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-        HttpSession session = getSession(request, response);
+        HttpSession session = getHttpSession(request, response);
+        String username = request.getParameter("username");
         try {
-            session.setAttribute("user_id", String.valueOf(kuizDAO.getUserId(request.getParameter("username"))));
+            session.setAttribute("user_id", String.valueOf(quizDAO.getUserId(username)));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
+        String password = request.getParameter("password");
         try {
-            boolean userAuthenticated = kuizDAO.userAuthenticated(request.getParameter("username"),
-                    request.getParameter("password"));
-            if (userAuthenticated) {
-                int userId = kuizDAO.getUserId(request.getParameter("username"));
-                HashMap<String, Integer> userScores = kuizDAO.getUserScores(userId);
+            if (quizDAO.userAuthenticated(username, password)) {
+                int userId = quizDAO.getUserId(username);
+                HashMap<String, Integer> userScores = quizDAO.getUserScores(userId);
                 request.setAttribute("userScores", userScores);
                 request.getRequestDispatcher("/quiz-game.jsp").forward(request, response);
             } else {
-                response.sendError(401, "User not authenticated");
+                response.sendError(401, "Unauthorized");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
