@@ -1,0 +1,40 @@
+
+#container {
+    margin-top: 20vh;
+    margin-left: 10em;
+}  
+
+table {
+	border-collapse: collapse;
+    font-family: Tahoma, Geneva, sans-serif;
+    min-width: 300px;
+    text-align: left;
+}
+table td {
+	padding: 15px;
+}
+table thead tr th {
+    font-size: 24px;
+    padding-bottom: 15px;
+}
+table thead td {
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 13px;
+	border-bottom: 3px solid #dddfe1;
+}
+table tbody td {
+	border-bottom: 1px solid #dddfe1;
+}
+table tbody tr {
+	background-color: #454545;
+}
+table tbody td:first-child a:hover {
+    color: orange;
+}
+table tbody td:last-child a {
+    cursor:default;
+}
+table tbody tr:nth-child(odd) {
+	background-color: #404040;
+}

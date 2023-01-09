@@ -1,0 +1,20 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Courier New", Courier, monospace;
+  color: white;
+  background: #454545;
+  width: 100vw;
+  height: 100vh;
+}
+h1 {
+  font-size: 40px;
+}
+a {
+  color: white;
+  font-size: 20px;
+  margin-top: 2em;
+  cursor: pointer;
+  text-decoration: none;
+}

@@ -2,13 +2,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>JSP - Hello World</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/index.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/indexPage.css" />
+    <title>Lab 4: Java EE</title>
   </head>
   <body>
-    <h1><%= "Assignment 4!" %></h1>
-    <br />
-    <a href="guessing-game">Guessing Game</a>
-    <br />
-    <a href="login">Quiz Login</a>
+    <div id="content">
+      <h1  id="page-title"><%= "Labb 4" %></h1>
+      <div id="items">
+        <a href="guessing-game">Guessing Game</a>
+        <br/>
+        <a href="login">Quiz Login</a>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,0 +1,27 @@
+#content {
+  position: absolute;
+  left: 50%;
+  height: 24em;
+  width: fit-content;
+}
+#page-title {
+  position: relative;
+  left: -50%;
+  text-align: center;
+}
+#items {
+  position: relative;
+  left: -50%;
+  border: white solid 1px;
+  border-radius: 15px;
+  padding: 5em;
+}
+a {
+  transition: opacity 100ms ease-in-out;
+}
+#items:hover > a {
+  opacity: 0.6;
+}
+#items a:hover {
+  opacity: 1;
+}

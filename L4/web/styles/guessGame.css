@@ -1,0 +1,19 @@
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 5em;
+  margin-right: auto;
+}
+
+#home-button {
+    width: fit-content;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 5px;
+  transition: all 100ms ease-in-out;
+}
+#home-button:hover {
+  color: orange;
+  background-color: gray;
+}

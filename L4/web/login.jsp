@@ -2,16 +2,27 @@
 <html>
   <head>
     <title>Login Page</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="${pageContext.request.contextPath}/styles/index.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="${pageContext.request.contextPath}/styles/login.css"
+    />
   </head>
   <body>
-    <form action="login" method="post">
-      <label>
-        <input type="text" name="username" placeholder="username" />
-      </label>
-      <label>
-        <input type="password" name="password" placeholder="password" />
-      </label>
-      <input type="submit" value="Login" />
-    </form>
+    <div id="container">
+      <form action="login" method="post">
+        <label for="uname">Username </label>
+        <input id="uname" type="text" name="username" />
+        <label for="pword">Password </label>
+        <input id="pword" type="password" name="password" />
+        <input id="button" type="submit" value="Login" />
+      </form>
+      <a href="index.jsp" >Home</a>
+    </div>
   </body>
 </html>
