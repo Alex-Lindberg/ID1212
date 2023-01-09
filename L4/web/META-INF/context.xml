@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/L4">
+<Resource name="jdbc/postgres" auth="Container" type="javax.sql.DataSource"
+    maxActive="50" maxIdle="30" maxWait="10000"
+    username="alex" password="pass"
+    driverClassName="org.postgreSQL"
+    url="jdbc:postgres//localhost:5432/test" />
+</Context>
