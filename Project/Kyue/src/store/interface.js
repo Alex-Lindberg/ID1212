@@ -28,6 +28,9 @@ const storeInterface = {
         get courses() {
             return store.getState().courseState.courses
         },
+        get error() {
+            return store.getState().courseState.error
+        },
         setCourses: (courses) => {
             return store.dispatch(courseActions.setCourses(courses))
         },

@@ -1,24 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getCourses } from "../api/course";
 
+const initialState = {
+    loading: false,
+    courses: [],
+    error: "",
+};
+
 export const fetchCourses = createAsyncThunk(
     "courses/fetchCourses",
     async () => await getCourses()
 );
 
 const courseSlice = createSlice({
-    name: "courses",
-    initialState: {
-        loading: false,
-        courses: [],
-        error: "",
-    },
+    name: "courseState",
+    initialState,
     reducers: {
         setCourses: (state, action) => {
-            console.log('action.payload :>> ', action.payload);
-            console.log('state.courses :>> ', state.courses);
-            console.log('state.courses :>> ', [...state.courses, action.payload]);
-            state.courses = [...state.courses, action.payload]
+            state.courses = action.payload
         },
     },
     extraReducers: (builder) => {

@@ -76,6 +76,7 @@ export const logout = async () => {
             .post("http://localhost:3000/api/logout", {}, config)
             .then(() => {
                 localStorage.removeItem("user");
+                localStorage.removeItem("courses");
                 window.location.pathname = "/login";
                 console.log("Removed");
             })
