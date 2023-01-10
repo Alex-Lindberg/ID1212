@@ -16,17 +16,20 @@ public class IMAPClient {
 
     public static final String USERNAME = System.getenv("KTH_USERNAME");
     public static final String PASSWORD = System.getenv("KTH_PASSWORD");
+    public static final String EMAIL = System.getenv("KTH_EMAIL");
     public static final String HOST = "webmail.kth.se";
     public static final int PORT = 993;
 
     private Session session;
 
-    public IMAPClient(String email) throws IOException {
+    public IMAPClient() throws IOException {
         if (USERNAME == null)
             throw new AssertionError("KTH_USERNAME not set as environment variable");
         if (PASSWORD == null)
             throw new AssertionError("KTH_PASSWORD not set as environment variable");
-        this.session = initSession(email);
+        if (EMAIL == null)
+            throw new AssertionError("KTH_EMAIL not set as environment variable");
+        this.session = initSession(EMAIL);
     }
 
     private Session initSession(String address) {
@@ -72,7 +75,7 @@ public class IMAPClient {
 
     public static void main(String[] args) {
         try {
-            IMAPClient client = new IMAPClient("alex5@kth.se");
+            IMAPClient client = new IMAPClient();
             client.readFirst();
         } catch (IOException | MessagingException e) {
             System.out.println("(main) Exception caught:");

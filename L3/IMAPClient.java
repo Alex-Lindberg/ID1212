@@ -28,9 +28,9 @@ public class IMAPClient implements AutoCloseable {
 
     public IMAPClient(SSLSocket socket) throws IOException {
         if (USERNAME == null)
-            throw new AssertionError("USERNAME not set as environment variable");
+            throw new AssertionError("KTH_USERNAME not set as environment variable");
         if (PASSWORD == null)
-            throw new AssertionError("PASSWORD not set as environment variable");
+            throw new AssertionError("KTH_PASSWORD not set as environment variable");
     
         this.socket = socket;
         this.socket.setUseClientMode(true);

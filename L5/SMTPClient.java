@@ -13,19 +13,20 @@ public class SMTPClient {
 
     public static final String PASSWORD = System.getenv("KTH_PASSWORD");
     public static final String USERNAME = System.getenv("KTH_USERNAME");
+    public static final String EMAIL = System.getenv("KTH_EMAIL");
     public static final String HOST = "smtp.kth.se";
     public static final int PORT = 587;
-    public String email;
 
     private Session session;
 
-    public SMTPClient(String email) {
+    public SMTPClient() {
         if (USERNAME == null)
             throw new AssertionError("KTH_USERNAME not set as environment variable");
         if (PASSWORD == null)
             throw new AssertionError("KTH_PASSWORD not set as environment variable");
-        this.session = initSession(email);
-        this.email = email;
+        if (EMAIL == null)
+            throw new AssertionError("KTH_EMAIL not set as environment variable");
+        this.session = initSession();
         System.out.println("New session created");
     }
 
@@ -37,8 +38,8 @@ public class SMTPClient {
         msg.addHeader("format", "flowed");
         msg.addHeader("Content-Transfer-Encoding", "8bit");
 
-        msg.setFrom(new InternetAddress(this.email));
-        msg.setReplyTo(InternetAddress.parse(this.email, false));
+        msg.setFrom(new InternetAddress(EMAIL));
+        msg.setReplyTo(InternetAddress.parse(EMAIL, false));
         msg.setSubject(subject, "UTF-8");
         msg.setText(body, "UTF-8");
         msg.setSentDate(new Date());
@@ -47,7 +48,7 @@ public class SMTPClient {
         return msg;
     }
 
-    private Session initSession(String address) {
+    private Session initSession() {
         Properties props = new Properties();
         props.put("mail.smtp.host", HOST);
         props.put("mail.smtp.socketFactory.port", PORT);
@@ -72,7 +73,7 @@ public class SMTPClient {
 
     public static void main(String[] args) throws Exception {
         try {
-            SMTPClient client = new SMTPClient("alex5@kth.se");
+            SMTPClient client = new SMTPClient();
             String recipient = "alex.lindberg@nvrmind.se";
             String message = "This is a message using the JavaMail api.";
             String sub = "Smtp mail using JavaMail.";

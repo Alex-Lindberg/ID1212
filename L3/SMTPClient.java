@@ -31,9 +31,9 @@ public class SMTPClient implements AutoCloseable {
 
     public SMTPClient(Socket socket) throws IOException {
         if (PLAIN == null)
-            throw new AssertionError("PLAIN not set as environment variable");
+            throw new AssertionError("SMTP_PLAIN not set as environment variable");
         if (EMAIL == null)
-            throw new AssertionError("EMAIL not set as environment variable");
+            throw new AssertionError("KTH_EMAIL not set as environment variable");
         this.socket = socket;
         this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.writer = new PrintWriter(socket.getOutputStream());
