@@ -17,9 +17,10 @@ public class Question {
     }
 
     private String[] parseArray(String options) {
+        System.out.println("Options :>>" + options);
         String[] a = options.split(",");
         a[0] = a[0].substring(1);
-        a[3] = a[3].substring(0, a[3].length() - 1);
+        a[a.length - 1] = a[a.length - 1].substring(0, a[a.length - 1].length() - 1);
         return a;
     }
 

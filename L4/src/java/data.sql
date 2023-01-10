@@ -1,51 +1,25 @@
-insert into users (id, username, password)
-values  (1, 'Alanah', 'baWTsh4'),
-        (2, 'Taddeo', 'rUYXhV7kj'),
-        (3, 'Trudie', 'Pap4XVZfi'),
-        (4, 'Claudette', 'Qd6aWu2tU'),
-        (5, 'Haskell', 'EIMRff0vOl'),
-        (6, 'Adelheid', 'TNr5cvGN'),
-        (7, 'Whit', 'kwBhHP'),
-        (8, 'Culley', 'eEVhXVFvviN4'),
-        (9, 'Oran', 'QTGwEG'),
-        (10, 'Elsey', 'IwvgnJ65T5l'),
-        (11, 'lucas', '123');insert into quizzes (id, subject)
-values  (628, 'Chevrolet'),
-        (615, 'Porsche'),
-        (746, 'Toyota'),
-        (791, 'Ford'),
-        (833, 'Rambler'),
-        (199, 'Mercury'),
-        (922, 'BMW'),
-        (90, 'Chevrolet'),
-        (896, 'Nissan'),
-        (449, 'Mazda');insert into questions (id, text, answer, options)
-values  (73, 'question7', 'option264', '{option561,option264,option3,option4}'),
-        (62, 'question5', 'answer2', '{option1,option2,option3,option4}'),
-        (13, 'some question3', 'option1', '{option1,option2,option3,option4}'),
-        (41, 'question4', 'option107', '{option107,option2780,option3,option4}'),
-        (79, 'question8', 'option12', '{option12,option23,option3,option4}'),
-        (7, 'some question2', 'option451', '{option451,option2455,option3,option4}'),
-        (70, 'question6', 'option125', '{option125,option2df,option3,option4}'),
-        (81, 'question9', 'answer2', '{option1,optionn3412,option3,option4}'),
-        (12, 'some question1', 'option6801', '{option6801,option267,option3,option4}');insert into results (id, user_id, quiz_id, score)
-values  (5, 1, 615, 19),
-        (6, 3, 615, 46),
-        (7, 3, 628, 66),
-        (9, 5, 628, 74),
-        (10, 1, 922, 87),
-        (11, 7, 628, 45),
-        (12, 5, 615, 81),
-        (3, 11, 628, 89),
-        (8, 11, 922, 3),
-        (4, 11, 791, 3);insert into selector (quiz_id, question_id)
-values  (628, 73),
-        (922, 41),
-        (628, 73),
-        (922, 41),
-        (791, 73),
-        (922, 7),
-        (791, 73),
-        (791, 7),
-        (922, 73),
-        (791, 41);
+DELETE FROM results;
+DELETE FROM selector;
+DELETE FROM questions;
+DELETE FROM quizzes;
+DELETE FROM users;
+
+INSERT INTO users (id, username, password)
+VALUES  (1, 'test', 'pass'),
+        (2, 'alex', 'pass');
+
+INSERT INTO quizzes (id, subject)
+VALUES  (1, 'Astronomy');
+
+INSERT INTO questions (id, text, answer,options) 
+VALUES  (1,'Which planets are larger than earth?', 'Saturn' ,'{Mercury,Saturn,Mars}'),
+        (2,'Which planets are farther away from the sun than earth?', 'Saturn' ,'{Mercury,Venus,Saturn}'), 
+        (3,'Which planets does not have rings?', 'Mercury' ,'{Mercury,Jupiter,Saturn}');
+
+INSERT INTO results (id, user_id, quiz_id, score)
+VALUES  (1,1,1,0),(2,2,1,0);
+
+INSERT INTO selector (quiz_id, question_id)
+VALUES  (1, 1),
+        (1, 2),
+        (1, 3);

@@ -6,11 +6,13 @@
 package db;
 
 import App.Question;
+import static db.Statements.*;
 import java.sql.*;
 import java.util.*;
 
 public class QuizDAO {
 
+    /* Database credentials */
     private final String DATABASE_URL = "jdbc:postgresql://localhost:5432/test?user=alex&password=pass";
     private final String USERNAME = "alex";
     private final String PASSWORD = "pass";
@@ -20,12 +22,13 @@ public class QuizDAO {
     private PreparedStatement validateUser;
     private PreparedStatement getUserId;
     private PreparedStatement getUserScore;
-    private PreparedStatement getQuizQuestions;
+    private PreparedStatement getQuestions;
     private PreparedStatement updateScore;
 
     public QuizDAO() throws SQLException {
         try {
             connect();
+            initPreparedStatements();
         } catch (SQLException error) {
             throw new SQLException("Connection to database failed", error);
         }
@@ -34,47 +37,29 @@ public class QuizDAO {
     private void connect() throws SQLException {
         Properties properties = new Properties();
         properties.setProperty(USERNAME, PASSWORD);
-        connection = DriverManager.getConnection(DATABASE_URL, properties);
-        connection.setAutoCommit(false);
-        preparedStatements();
+        this.connection = DriverManager.getConnection(DATABASE_URL, properties);
+        this.connection.setAutoCommit(false);
     }
 
     public void updateUserScore(int points, int user_id, int quiz_id) throws SQLException {
         try {
-            updateScore.setInt(1, points);
-            updateScore.setInt(2, user_id);
-            updateScore.setInt(3, quiz_id);
-            updateScore.executeUpdate();
+            this.updateScore.setInt(1, points);
+            this.updateScore.setInt(2, user_id);
+            this.updateScore.setInt(3, quiz_id);
+            this.updateScore.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             throw new SQLException("could not update user score", e);
         }
     }
 
-    private void preparedStatements() throws SQLException {
+    private void initPreparedStatements() throws SQLException {
         try {
-            validateUser = connection.prepareStatement(
-                    "SELECT * FROM users WHERE username = ? AND password = ?");
-
-            getUserId = connection.prepareStatement(
-                    "SELECT id FROM users WHERE username = ?");
-
-            getUserScore = connection.prepareStatement(
-                    "SELECT * FROM results WHERE user_id = ?");
-
-            // need to be tested
-            getQuizQuestions = connection.prepareStatement(
-                    "SELECT questions.*\n" +
-                            "FROM quizzes\n" +
-                            "JOIN selector ON ? = selector.quiz_id\n" +
-                            "JOIN questions ON selector.question_id = questions.id\n" +
-                            "WHERE quizzes.id = ?");
-
-            updateScore = connection.prepareStatement(
-                    "UPDATE results " +
-                            "SET score =  ? " +
-                            "WHERE user_id = ? AND quiz_id = ?");
-
+            this.validateUser = connection.prepareStatement(VALIDATE_USER);
+            this.getUserId = connection.prepareStatement(GET_USER_ID);
+            this.getUserScore = connection.prepareStatement(GET_USER_SCORE);
+            this.getQuestions = connection.prepareStatement(GET_QUIZ_QUESTIONS);
+            this.updateScore = connection.prepareStatement(UPDATE_SCORE);
         } catch (SQLException error) {
             throw new SQLException("Could not prepare statements", error);
         }
@@ -82,21 +67,22 @@ public class QuizDAO {
 
     public boolean userAuthenticated(String username, String password) throws SQLException {
         try {
-            validateUser.setString(1, username);
-            validateUser.setString(2, password);
-            return validateUser.executeQuery().next();
+            this.validateUser.setString(1, username);
+            this.validateUser.setString(2, password);
+            return this.validateUser.executeQuery().next();
         } catch (SQLException error) {
             throw new SQLException("Could not check if user exists", error);
         }
     }
 
     // Getters
-
+    
     public HashMap<String, Integer> getUserScores(int userId) throws SQLException {
         HashMap<String, Integer> userScores = new HashMap<>();
         try {
             getUserScore.setInt(1, userId);
             ResultSet queryResults = getUserScore.executeQuery();
+            
             while (queryResults.next()) {
                 userScores.put(queryResults.getString("quiz_id"), queryResults.getInt("score"));
             }
@@ -109,9 +95,9 @@ public class QuizDAO {
     public ArrayList<Question> getQuizQuestions(int quizId) throws SQLException {
         ArrayList<Question> questions = new ArrayList<>();
         try {
-            getQuizQuestions.setInt(1, quizId);
-            getQuizQuestions.setInt(2, quizId);
-            ResultSet queryResults = getQuizQuestions.executeQuery();
+            getQuestions.setInt(1, quizId);
+            getQuestions.setInt(2, quizId);
+            ResultSet queryResults = getQuestions.executeQuery();
             while (queryResults.next()) {
                 questions.add(new Question(
                         queryResults.getString("text"),

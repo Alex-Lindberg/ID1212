@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
 
 @WebServlet(name = "login", value = "/login")
 
@@ -29,7 +30,7 @@ public class Login extends HttpServlet {
             session = request.getSession();
         }
 
-        response.setHeader("Set-Cookie", "JSESSIONID=" + session.getId() + "; HttpOnly");
+        //response.setHeader("Set-Cookie", "JSESSIONID=" + session.getId() + "; HttpOnly");
         System.out.println("Session id: " + session.getId());
         return session;
     }
@@ -55,6 +56,10 @@ public class Login extends HttpServlet {
             if (quizDAO.userAuthenticated(username, password)) {
                 int userId = quizDAO.getUserId(username);
                 HashMap<String, Integer> userScores = quizDAO.getUserScores(userId);
+                
+                System.out.println("keys " + userScores.keySet().toString());
+                System.out.println("keys " + userScores.values().toString());
+                
                 request.setAttribute("userScores", userScores);
                 request.getRequestDispatcher("/quiz-game.jsp").forward(request, response);
             } else {

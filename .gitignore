@@ -29,3 +29,7 @@ Test/
 .env
 *.jks
 *.pfx
+/L4/netbeans/L4/nbproject/private/
+/L4/netbeans/Lab4/nbproject/private/
+/L4/nbproject/private/
+/L4/build/

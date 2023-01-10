@@ -36,10 +36,12 @@ public class Quiz extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
+        
         int quizId = Integer.parseInt((String) session.getAttribute("quiz_id"));
         int userId = Integer.parseInt((String) session.getAttribute("user_id"));
+        
         try {
-            String[] answers = { "q1", "q2", "q3", "q4" };
+            String[] answers = { "q1", "q2", "q3"};
             int score = 0;
             for (String answer : answers) {
                 if (request.getParameter(answer).equals("true"))

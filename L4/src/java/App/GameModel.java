@@ -5,9 +5,9 @@ public class GameModel {
     private int guesses = 0;
     private int secret;
 
-    public GameModel() {
+    public GameModel(String id) {
         this.secret = (int) (Math.random() * 100);
-        System.out.println("Secret number: " + secret);
+        System.out.println(id + " [secret number]: " + secret);
     }
 
     public String guess(int guess) {
@@ -17,16 +17,16 @@ public class GameModel {
             return String.format("You made it in %d guesses!!!", guesses);
         }
         if (guess < this.secret)
-            return String.format("Wrong, Guess higher! You have made %d guess(es)", guesses);
+            return String.format("Wrong, Guess higher!", guesses);
         else
-            return String.format("Wrong, Guess lower! You have made %d guess(es)", guesses);
+            return String.format("Wrong, Guess lower!", guesses);
     }
 
     public int getNumberOfGuesses() {
         return guesses;
     }
 
-    public boolean isGameOver() {
+    public boolean isFinished() {
         return this.finished;
     }
 
