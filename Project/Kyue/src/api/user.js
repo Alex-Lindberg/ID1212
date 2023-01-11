@@ -41,10 +41,9 @@ export const login = async (user) => {
     }
 };
 
-export const validateUser = async (user) => {
-    // const user = useUserState()?.user?.currentUser;
+export const loadUser = async (user) => {
     if (!user) user = localStorage.getItem("user");
-    // if (!user || !user?.currentUser) window.location.pathname = "/login";
+    if (!user) return null
     const config = {
         headers: {
             "Content-Type": "application/json",
@@ -53,11 +52,12 @@ export const validateUser = async (user) => {
     };
     try {
         return await axios
-            .get("http://localhost:3000/api/users/session", config)
-            .then(({ data }) => {
-                localStorage.setItem("user", JSON.stringify(data));
-                return data;
-            });
+                .get("http://localhost:3000/api/users/session", config)
+                .then(({ data }) => {
+                    localStorage.setItem("user", JSON.stringify(data));
+                    return data;
+                })
+            
     } catch (error) {
         console.error(error);
     }
@@ -86,19 +86,5 @@ export const logout = async (user) => {
             });
     } catch (error) {
         console.error("Failed to validate user", error);
-    }
-};
-
-export const loadUser = () => {
-    const user = localStorage.getItem("user");
-    if (!user) return { type: "" };
-    console.log("user :>> ", user);
-    try {
-        return {
-            type: "loadUser",
-            payload: validateUser(),
-        };
-    } catch (error) {
-        console.error(error);
     }
 };
