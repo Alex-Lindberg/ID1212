@@ -14,6 +14,7 @@ import store from "./store";
 import Queue from "./routes/Queue";
 import "./index.css";
 import { useEffect } from "react";
+import useUserState from "./hooks/useUserState";
 
 const router = createBrowserRouter(
     [
@@ -45,12 +46,15 @@ const router = createBrowserRouter(
 );
 
 const LifeCycle = ({children}) => {
+    const { user } = useUserState();
     const dispatch = useDispatch();
     useEffect(() => {
-        if (!dispatch) return;
+        if ( !dispatch || user ) return;
 
-        dispatch(loadUser);
+        dispatch(loadUser(user));
+
     }, [dispatch]);
+    
     return { ...children };
 };
 
