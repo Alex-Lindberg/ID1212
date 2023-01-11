@@ -1,0 +1,71 @@
+.login-html .forms .sign-up-html {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    opacity: 0;
+    transition: transform 0.4s linear, opacity 400ms ease;
+}
+
+.sign-up {
+    display: none;
+}
+.tab {
+    font-size: 22px;
+    color: rgba(255, 255, 255, 0.6);
+    padding-bottom: 5px;
+    margin: 0 1em 1rem 0;
+    display: inline-block;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+}
+
+.sign-up:checked + .tab {
+    color: #fff;
+    border-color: rgba(238, 138, 17, 0.75);
+}
+
+.group label {
+    display: block;
+    margin-top: 30px;
+}
+input {
+    border-style: none;
+    display: block;
+    height: 3rem;
+    width: 100%;
+    margin-top: 1em;
+    padding: 0 10px;
+    background: #fff;
+    border-radius: 5px;
+}
+.button {
+    width: 100%;
+    margin-top: 2rem;
+    border-radius: 5px;
+    background: #fff;
+    color: #080710;
+    font-size: 18px;
+    cursor: pointer;
+    border-style: none;
+    transition: background-color 200ms ease-in-out;
+}
+
+.button:hover {
+    background-color: rgba(238, 138, 17, 0.75);
+}
+
+.login-form .group .check:checked + label {
+    color: #fff;
+}
+.login-html .sign-in:checked + .tab + .sign-up + .tab + .forms .sign-in-html {
+    transform: rotate(0);
+    opacity: 1;
+}
+.login-html .sign-up:checked + .tab + .forms .sign-up-html {
+    transform: rotate(0);
+    opacity: 1;
+}
