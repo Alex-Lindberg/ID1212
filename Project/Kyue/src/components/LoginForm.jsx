@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { login, register } from "../api/user";
+import { login, register } from "../api";
 import "./LoginForm.css";
 
 const LoginForm = (props) => {

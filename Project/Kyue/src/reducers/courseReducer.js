@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getCourses } from "../api/course";
+import { getCourses } from "../api";
 
 const initialState = {
     loading: false,

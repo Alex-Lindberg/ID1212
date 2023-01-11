@@ -1,4 +1,4 @@
-import { logout } from "../api/user";
+import { logout } from "../api";
 import "./LogoutButton.css";
 
 const LogoutButton = () => {
