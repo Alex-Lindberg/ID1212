@@ -5,25 +5,21 @@ import {
     RouterProvider,
     redirect,
 } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import Root from "./routes/Root";
 import ErrorPage from "./errorPage";
 import { Login } from "./routes";
-import { validateUser } from "./api/user";
+import { loadUser } from "./api";
 import store from "./store";
 import Queue from "./routes/Queue";
 import "./index.css";
+import { useEffect } from "react";
 
 const router = createBrowserRouter(
     [
         {
             path: "/",
             element: <Root />,
-            loader: async () => {
-                return validateUser().catch(() => {
-                    return redirect("/login");
-                });
-            },
             children: [
                 {
                     path: "/:courseId",
@@ -48,10 +44,22 @@ const router = createBrowserRouter(
     })
 );
 
+const LifeCycle = ({children}) => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (!dispatch) return;
+
+        dispatch(loadUser);
+    }, [dispatch]);
+    return { ...children };
+};
+
 ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={store}>
         <React.StrictMode>
-            <RouterProvider router={router} />
+            <LifeCycle>
+                <RouterProvider router={router} />
+            </LifeCycle>
         </React.StrictMode>
     </Provider>
 );
