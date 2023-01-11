@@ -3,44 +3,46 @@ import useUserState from "../hooks/useUserState";
 
 export const getCourses = async () => {
     try {
-        
-    const user = useUserState()?.user?.currentUser;
-    if (!user) {
-        window.location.pathname = "/login";
-    }
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            user: JSON.stringify(user),
-        },
-    };
-    return axios
-        .get("http://localhost:3000/api/courses", config)
-        .then(({ data }) => {
-            // localStorage.setItem("courses", JSON.stringify(data)); // ??????
-            return data;
-        }).catch(console.error);
-    } catch(error) {
+        const { user } = useUserState();
+        if (!user?.currentUser) {
+            window.location.pathname = "/login";
+        }
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                user: JSON.stringify(user.currentUser),
+            },
+        };
+        return axios
+            .get("http://localhost:3000/api/courses", config)
+            .then(({ data }) => {
+                return data;
+            })
+            .catch(console.error);
+    } catch (error) {
         console.error(error);
     }
 };
 
-export const getCourseItems = async () => {
+export const getCourseItems = async (courseId) => {
     try {
-        const user = useUserState()?.user?.currentUser;
-        if (!user) window.location.pathname = "/login";
+        const { user } = useUserState();
+        if (!user?.currentUser) {
+            window.location.pathname = "/login";
+        }
+        if (!courseId) return;
         const config = {
             headers: {
                 "Content-Type": "application/json",
-                user: JSON.stringify(user),
+                user: JSON.stringify(user.currentUser),
             },
         };
-        return await axios
-            .get("http://localhost:3000/api/users/session", config)
+        return axios
+            .get(`http://localhost:3000/api/courses/${courseId}`, config)
             .then(({ data }) => {
-                // localStorage.setItem("courseItems", JSON.stringify(data));
                 return data;
-            });
+            })
+            .catch(console.error);
     } catch (error) {
         console.error(error);
     }

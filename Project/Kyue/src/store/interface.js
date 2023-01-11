@@ -1,6 +1,7 @@
 import { userActions } from "../reducers/userReducer";
 import store from ".";
 import { courseActions, fetchCourses } from "../reducers/courseReducer";
+import { fetchQueue, queueActions } from "../reducers/queueReducer";
 
 const storeInterface = {
     user: {
@@ -34,10 +35,25 @@ const storeInterface = {
         setCourses: (courses) => {
             return store.dispatch(courseActions.setCourses(courses))
         },
-        fatchCourses: () => {
+        fetchCourses: () => {
             return store.dispatch(fetchCourses())
         }
+    },
+    queue: {
+        get queue() {
+            return store.getState().queueState.queue
+        },
+        get error() {
+            return store.getState().queueState.error
+        },
+        setQueue: (queue) => {
+            return store.dispatch(queueActions.setQueue(queue))
+        },
+        fetchQueue: (courseId) => {
+            return store.dispatch(fetchQueue(courseId))
+        }
     }
+    
 };
 
 export default storeInterface;

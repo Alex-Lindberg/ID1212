@@ -19,14 +19,12 @@ import useUserState from "./hooks/useUserState";
 const router = createBrowserRouter(
     [
         {
-            path: "/",
+            path: "/courses",
             element: <Root />,
-            children: [
-                {
-                    path: "/:courseId",
-                    element: <Queue />,
-                },
-            ],
+        },
+        {
+            path: "/courses/:courseId",
+            element: <Queue />,
         },
         {
             path: "/login",
@@ -45,16 +43,15 @@ const router = createBrowserRouter(
     })
 );
 
-const LifeCycle = ({children}) => {
+const LifeCycle = ({ children }) => {
     const { user } = useUserState();
     const dispatch = useDispatch();
     useEffect(() => {
-        if ( !dispatch || user ) return;
+        if (!dispatch || user) return;
 
         dispatch(loadUser(user));
-
     }, [dispatch]);
-    
+
     return { ...children };
 };
 

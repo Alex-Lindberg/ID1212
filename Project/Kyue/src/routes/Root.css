@@ -22,8 +22,6 @@
     margin-top: 2em;
     width: 50%;
     z-index: 3;
-
-    counter-reset: item;
 }
 
 .course-item {
@@ -31,7 +29,11 @@
     position: relative;
     justify-content: space-between;
     box-sizing: border-box;
-    
+
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+
     background-color: rgba(100, 100, 100, 0.4);
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -42,9 +44,6 @@
     padding: 2em;
     transition: transform 150ms ease-in-out,
         opacity 250ms ease-in-out;
-}
-.course-item[data-active-item] {
-    counter-increment: item 1;
 }
 
 #course-list-wrapper:hover > .course-item {

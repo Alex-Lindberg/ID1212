@@ -5,6 +5,7 @@
         - [x] backend
         - [x] frontend
     - [x] Login redirect
+    - [ ] Refactorera userState till att inte använda Local Storage
 
 - [ ] Session
     - [x] Spärra på api nivå
@@ -13,7 +14,7 @@
 - [ ] Queue
     - [x] Hämta Kurs
         - [x] backend
-        - [ ] frontend
+        - [x] frontend
     - [x] Uppdatera QI kommentar
         - [x] backend
         - [ ] frontend
