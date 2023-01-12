@@ -100,9 +100,9 @@ const getCourses = async (req, res, next) => {
 
 const getCourse = async (req, res, next) => {
     try {
-        const courseId = req.body.courseId || utils.getCourse(req).id;
+        const courseId = req.params.courseId || utils.getCourse(req).id;
         const courses = await query(
-            `SELECT * FROM courses WHERE id='${courseId}'`
+            `SELECT username, location, comment, status FROM queue_item INNER JOIN users ON users.id = user_id WHERE course_id='${courseId}'`
         );
         if (!courses?.rows[0]) {
             return res.status(404).send(`No course found with id ${courseId}`);

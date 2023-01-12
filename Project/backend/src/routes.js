@@ -47,7 +47,7 @@ const userRoutes = (app) => {
     );
 };
 
-const queueRoutes = (app) => {
+const courseRoutes = (app) => {
     app.post(
         "/api/courses",
         coursesMiddleware.initLocals,
@@ -139,7 +139,7 @@ const queueRoutes = (app) => {
 
 const init = (app) => {
     userRoutes(app);
-    queueRoutes(app);
+    courseRoutes(app);
 };
 
 module.exports = { init };
