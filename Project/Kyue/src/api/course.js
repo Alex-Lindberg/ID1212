@@ -44,7 +44,10 @@ export const getCourseItems = async (courseId) => {
             .then(({ data }) => {
                 return data;
             })
-            .catch(console.error);
+            .catch(() => {
+                console.log('No data found');
+                return []
+            });
     } catch (error) {
         console.error(error);
     }

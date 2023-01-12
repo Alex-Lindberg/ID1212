@@ -39,7 +39,7 @@ const createCourse = async (req, res, next) => {
 
 const setCourseAdministrator = (boolean) => async (req, res, next) => {
     try {
-        const user = getUser(req) || res.locals.user || null
+        const user = getUser(req) || res.locals.user || null;
         if (boolean) {
             await query(
                 `INSERT INTO administrators VALUES ('${user.id}', '${req.body.courseId}')`
@@ -51,7 +51,7 @@ const setCourseAdministrator = (boolean) => async (req, res, next) => {
         }
         return next();
     } catch (error) {
-        console.log('error :>> ', error);
+        console.log("error :>> ", error);
         return res.sendStatus(500);
     }
 };
@@ -64,7 +64,7 @@ const isAdministrator = async (req, res, next) => {
             `SELECT * FROM administrators WHERE user_id='${user.id}' AND course_id='${req.body.courseId}'`
         );
         if (pgResponse?.rows?.length > 0) return next();
-        
+
         return res.sendStatus(403);
     } catch (error) {
         console.error("error :>> ", error);
@@ -102,11 +102,42 @@ const getCourse = async (req, res, next) => {
     try {
         const courseId = req.params.courseId || utils.getCourse(req).id;
         const courses = await query(
-            `SELECT username, location, comment, status FROM queue_item INNER JOIN users ON users.id = user_id WHERE course_id='${courseId}'`
+            `SELECT * FROM courses WHERE id='${courseId}'`
         );
         if (!courses?.rows[0]) {
             return res.status(404).send(`No course found with id ${courseId}`);
         }
+        res.locals.courses = courses.rows;
+        return next();
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+};
+
+const checkCourseExist = async (req, res, next) => {
+    try {
+        const courseId = req.params.courseId || utils.getCourse(req).id;
+        const courses = await query(
+            `SELECT * FROM courses WHERE id='${courseId}'`
+        );
+        if (!courses?.rows[0]) {
+            return res.status(404).send(`No course found with id ${courseId}`);
+        }
+        return next();
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+};
+
+const getCourseItems = async (req, res, next) => {
+    try {
+        const courseId = req.params.courseId || utils.getCourse(req).id;
+        const courses = await query(
+            `SELECT username, location, comment, status 
+            FROM queue_item 
+            INNER JOIN users ON users.id = user_id 
+            WHERE course_id='${courseId}'`
+        );
         res.locals.courses = courses.rows;
         return next();
     } catch (error) {
@@ -123,4 +154,6 @@ module.exports = {
     courseExists,
     setCourseAdministrator,
     isAdministrator,
+    checkCourseExist,
+    getCourseItems
 };

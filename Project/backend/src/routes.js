@@ -132,7 +132,8 @@ const courseRoutes = (app) => {
         usersMiddleware.getUserByEmail,
         authMiddleware.getSession,
         authMiddleware.validateSession,
-        coursesMiddleware.getCourse,
+        coursesMiddleware.checkCourseExist,
+        coursesMiddleware.getCourseItems,
         responseMiddleware.sendResponse("courses")
     );
 };
