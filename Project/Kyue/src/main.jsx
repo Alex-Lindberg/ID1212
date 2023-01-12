@@ -25,6 +25,9 @@ const router = createBrowserRouter(
         {
             path: "/courses/:courseId",
             element: <Queue />,
+            loader: ({params}) => {
+                return params.courseId
+            }
         },
         {
             path: "/login",

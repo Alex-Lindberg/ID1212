@@ -3,11 +3,7 @@ import { getCourseItems } from "../api";
 
 const initialState = {
     loading: false,
-    queue: {
-        id: "",
-        title: "",
-        status: "",
-    },
+    queue: [],
     error: "",
 };
 

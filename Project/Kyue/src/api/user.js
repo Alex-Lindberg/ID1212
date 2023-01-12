@@ -48,6 +48,7 @@ export const loadUser = async (user) => {
         headers: {
             "Content-Type": "application/json",
             user: JSON.stringify(user.currentUser),
+            sessionId: user.sessionId
         },
     };
     try {
@@ -66,10 +67,13 @@ export const loadUser = async (user) => {
 export const logout = async (user) => {
     if (!user) user = localStorage.getItem("user");
     if (!user) window.location.pathname = "/login";
+    if(typeof user === String)
+        user = JSON.parse(user).user
     const config = {
         headers: {
             "Content-Type": "application/json",
-            user,
+            user: user,
+            sessionId: user.sessionId
         },
     };
     try {

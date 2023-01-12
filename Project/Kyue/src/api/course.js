@@ -11,6 +11,7 @@ export const getCourses = async () => {
             headers: {
                 "Content-Type": "application/json",
                 user: JSON.stringify(user.currentUser),
+                sessionId: user.sessionId
             },
         };
         return axios
@@ -35,6 +36,7 @@ export const getCourseItems = async (courseId) => {
             headers: {
                 "Content-Type": "application/json",
                 user: JSON.stringify(user.currentUser),
+                sessionId: user.sessionId
             },
         };
         return axios

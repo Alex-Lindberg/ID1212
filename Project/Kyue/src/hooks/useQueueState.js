@@ -18,8 +18,8 @@ const useQueueState = () => {
             setQueue: (queue) => {
                 dispatch(queueActions.setQueue(queue))
             },
-            fetchQueue: () => {
-                dispatch(fetchQueue())
+            fetchQueue: (queueId) => {
+                dispatch(fetchQueue(queueId))
             }
         },
     };

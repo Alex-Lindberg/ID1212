@@ -6,18 +6,21 @@ import { fetchQueue } from "../reducers/queueReducer";
 import { LogoutButton, Navbar } from "../components";
 import useQueueState from "../hooks/useQueueState";
 
-import "./Queue.css"
+import "./Queue.css";
+import { useLoaderData } from "react-router-dom";
 
-const Queue = ({ id, title, status }) => {
+const Queue = () => {
     const { user } = useUserState();
     const { queue } = useQueueState();
-
+    const courseId = useLoaderData();
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (!dispatch || queue?.id) return;
-        dispatch(fetchQueue(id));
+        dispatch(fetchQueue(courseId));
     }, [dispatch]);
+
+    useEffect(() => {}, [queue]);
 
     return !queue || !user ? (
         <div>Relax</div>
@@ -25,13 +28,16 @@ const Queue = ({ id, title, status }) => {
         <div className="queue-container">
             <Navbar username={user.currentUser.username} />
             <h1>Queue</h1>
-            <div className="course-item">
-                <div>
-                    <span>{queue?.id + " "}</span>
-                    <span>{queue?.title}</span>
-                </div>
-                <div>{queue?.status}</div>
-            </div>
+            {queue.queue.map((item) => {
+                return (<div className="course-item">
+                    <div>
+                        <span>{item?.username + " "}</span>
+                        <span>{item?.location}</span>
+                        <span>{item?.comment}</span>
+                        <span>{item?.status}</span>
+                    </div>
+                </div>)
+            })}
         </div>
     );
 };
