@@ -1,10 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-    createBrowserRouter,
-    RouterProvider,
-    redirect,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
 import Root from "./routes/Root";
 import ErrorPage from "./errorPage";
@@ -15,17 +11,19 @@ import Queue from "./routes/Queue";
 import "./index.css";
 import { useEffect } from "react";
 import useUserState from "./hooks/useUserState";
-import { Navigate } from "react-router-dom";
+import useCourseState from "./hooks/useCourseState";
+import CourseList from "./routes/CourseList";
+
 
 const router = createBrowserRouter(
     [
         {
             path: "/",
-            element: <Navigate to="/courses" />
+            element: <Root />,
         },
         {
             path: "/courses",
-            element: <Root />,
+            element: <CourseList />,
         },
         {
             path: "/courses/:courseId",
@@ -53,12 +51,12 @@ const router = createBrowserRouter(
 
 const LifeCycle = ({ children }) => {
     const { user } = useUserState();
+    const { courses } = useCourseState();
     const dispatch = useDispatch();
     useEffect(() => {
         if (!dispatch || user) return;
-        
-
         dispatch(loadUser(user));
+        dispatch(courses.fetchCourses());
     }, [dispatch]);
 
     return { ...children };

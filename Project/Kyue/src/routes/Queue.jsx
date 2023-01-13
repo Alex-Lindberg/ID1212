@@ -2,7 +2,7 @@ import useUserState from "../hooks/useUserState";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchQueue } from "../reducers/queueReducer";
-import { Navbar } from "../components";
+import { AsyncDataWrapper, Navbar } from "../components";
 import useQueueState from "../hooks/useQueueState";
 import { useLoaderData } from "react-router-dom";
 import QueueForm from "../components/QueueForm";
@@ -20,9 +20,8 @@ const Queue = () => {
         dispatch(fetchQueue(courseId));
     }, [dispatch]);
 
-    // useEffect(() => {}, [queue]);
-
     return (
+        <AsyncDataWrapper data={queue?.queue} error={queue?.error}>
         <div style={{ position: "relative" }} className="queue-page">
             <Navbar username={user?.currentUser?.username} />
             <div className="queue-page-wrapper">
@@ -62,6 +61,7 @@ const Queue = () => {
                 </div>
             </div>
         </div>
+        </AsyncDataWrapper>
     );
 };
 
