@@ -10,6 +10,8 @@ const login = async (req, res, next) => {
             ...res.locals.user,
             sessionId: res.locals.user.sessionId.rows[0].new_session,
         };
+        // @TODO: Refactor this to not send password down the chain instead
+        delete res.locals.user.password
         return next();
     } catch (error) {
         res.sendStatus(500);
@@ -24,6 +26,7 @@ const logout = async (req, res, next) => {
         if (!pgResponse.rows[0].delete_session) {
             return res.sendStatus(404);
         }
+        delete res.locals.user;
         return next();
     } catch (error) {
         console.log('error :>> ', error);
