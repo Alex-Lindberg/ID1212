@@ -12,7 +12,8 @@
 .navbar {
     display: flex;
     justify-content: space-between;
-    max-width: 70%;
+    min-width: 450px;
+    width: 50%;
     padding-top: 1em;
     padding-bottom: 1em;
     margin-left: auto;
@@ -24,4 +25,22 @@
     font-size: var(--font-size-1);
     line-height: var(--line-h-3);
     font-weight: 600;
+}
+
+.nav-welcome {
+    padding-right: 2em;
+}
+.nav-menu-items {
+    color: inherit;
+    font-size: 20px;
+    line-height: var(--line-h-0);
+    padding-top: 3px;
+    padding-left: 1em;
+    padding-right: 1em;
+    font-weight: 300;
+    text-decoration: none;
+    cursor: pointer;
+}
+.nav-menu-items:not(:last-child) {
+    border-right: solid 2px rgba(255,255,255,0.5);
 }

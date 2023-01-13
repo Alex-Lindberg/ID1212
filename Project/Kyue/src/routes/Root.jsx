@@ -7,6 +7,7 @@ import Searchbar from "../components/Searchbar";
 import useCourseState from "../hooks/useCourseState";
 import AsyncDataWrapper from "../components/AsyncDataWrapper";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Root = () => {
     const { user } = useUserState();
