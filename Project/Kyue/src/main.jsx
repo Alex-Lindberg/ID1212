@@ -54,9 +54,9 @@ const LifeCycle = ({ children }) => {
     const { courses } = useCourseState();
     const dispatch = useDispatch();
     useEffect(() => {
-        if (!dispatch || user) return;
-        dispatch(loadUser(user));
-        dispatch(courses.fetchCourses());
+        if (!dispatch || user || user.isLoading) return;
+        dispatch(user.loadUser(user));
+        dispatch(courses.fetchCourses(user));
     }, [dispatch]);
 
     return { ...children };

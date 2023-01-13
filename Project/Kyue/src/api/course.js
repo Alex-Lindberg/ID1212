@@ -1,17 +1,13 @@
 import axios from "axios";
 import useUserState from "../hooks/useUserState";
 
-export const getCourses = async () => {
+export const getCourses = async (user) => {
     try {
-        const { user } = useUserState();
-        if (!user?.currentUser) {
-            window.location.pathname = "/login";
-        }
         const config = {
             headers: {
                 "Content-Type": "application/json",
                 user: JSON.stringify(user.currentUser),
-                sessionId: user.sessionId
+                sessionId: user.sessionId,
             },
         };
         return axios
@@ -25,18 +21,15 @@ export const getCourses = async () => {
     }
 };
 
-export const getCourseItems = async (courseId) => {
+export const getCourseItems = async (courseId, user) => {
     try {
-        const { user } = useUserState();
-        if (!user?.currentUser) {
-            window.location.pathname = "/login";
-        }
+        if (!user) return;
         if (!courseId) return;
         const config = {
             headers: {
                 "Content-Type": "application/json",
                 user: JSON.stringify(user.currentUser),
-                sessionId: user.sessionId
+                sessionId: user.sessionId,
             },
         };
         return axios

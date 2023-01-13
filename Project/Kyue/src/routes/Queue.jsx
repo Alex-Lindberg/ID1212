@@ -16,12 +16,11 @@ const Queue = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!dispatch || queue?.id) return;
-        dispatch(fetchQueue(courseId));
-    }, [dispatch]);
+        if (!dispatch || queue?.queue) return;
+        dispatch(fetchQueue(courseId, user));
+    }, [dispatch, queue?.queue]);
 
     return (
-        <AsyncDataWrapper data={queue?.queue} error={queue?.error}>
         <div style={{ position: "relative" }} className="queue-page">
             <Navbar username={user?.currentUser?.username} />
             <div className="queue-page-wrapper">
@@ -38,30 +37,36 @@ const Queue = () => {
                     </span>
                 </div>
                 <div className="line-break" />
-                <QueueForm className="form-container" />
-                <div className="queue-container">
-                    {queue.queue !== [] ? (
-                        queue?.queue.map((item) => {
-                            return (
-                                <div className="course-item" aria-checked={item?.status !== "Waiting"}>
-                                    <div>
-                                        <span>{item?.username + " "}</span>
-                                        <span>{item?.location}</span>
-                                        <span>{item?.comment}</span>
-                                        <span>{item?.status}</span>
+                <AsyncDataWrapper data={queue?.queue} error={queue?.error}>
+                    <QueueForm className="form-container" />
+                    <div className="queue-container">
+                        {queue?.queue && queue?.queue !== [] ? (
+                            queue?.queue.map((item) => {
+                                return (
+                                    <div
+                                        className="course-item"
+                                        aria-checked={
+                                            item?.status !== "Waiting"
+                                        }
+                                    >
+                                        <div>
+                                            <span>{item?.username + " "}</span>
+                                            <span>{item?.location}</span>
+                                            <span>{item?.comment}</span>
+                                            <span>{item?.status}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            );
-                        })
-                    ) : (
-                        <div className="no-one-in-queue-msg">
-                            No one is currently in the queue.
-                        </div>
-                    )}
-                </div>
+                                );
+                            })
+                        ) : (
+                            <div className="no-one-in-queue-msg">
+                                No one is currently in the queue.
+                            </div>
+                        )}
+                    </div>
+                </AsyncDataWrapper>
             </div>
         </div>
-        </AsyncDataWrapper>
     );
 };
 

@@ -13,12 +13,13 @@ const CourseList = () => {
     const { courses } = useCourseState();
 
     useEffect(() => {
-        courses.fetchCourses();
-    }, []);
+        if(user.currentUser)
+            courses.fetchCourses(user);
+    }, [user.currentUser]);
 
     return (
         <div style={{ position: "relative" }} className="root-page">
-            <Navbar username={user.currentUser.username} />
+            <Navbar username={user?.currentUser?.username} />
             <div className="list-header">
                 <div>Courses</div>
                 <Searchbar />

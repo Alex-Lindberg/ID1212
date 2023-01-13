@@ -1,7 +1,8 @@
-import { userActions } from "../reducers/userReducer";
+import { login, loadUser, userActions } from "../reducers/userReducer";
 import store from ".";
 import { courseActions, fetchCourses } from "../reducers/courseReducer";
 import { fetchQueue, queueActions } from "../reducers/queueReducer";
+// import { loadUser } from "../api";
 
 const storeInterface = {
     user: {
@@ -12,11 +13,20 @@ const storeInterface = {
             const user = store.getState().userState.user;
             return user.id && user.sessionId;
         },
+        get isLoading() {
+            return store.getState().userState.loading;
+        },
         get id() {
             return store.getState().userState.user.id;
         },
         get sessionId() {
             return store.getState().userState.user.sessionId;
+        },
+        login: (credentials) => {
+            return store.dispatch(login(credentials))
+        },
+        loadUser: (user) => {
+            return store.dispatch(loadUser(user))  
         },
         setUser: (user) => {
             store.dispatch(userActions.setUser(user));
@@ -35,8 +45,8 @@ const storeInterface = {
         setCourses: (courses) => {
             return store.dispatch(courseActions.setCourses(courses))
         },
-        fetchCourses: () => {
-            return store.dispatch(fetchCourses())
+        fetchCourses: (user) => {
+            return store.dispatch(fetchCourses(user))
         }
     },
     queue: {
@@ -49,8 +59,8 @@ const storeInterface = {
         setQueue: (queue) => {
             return store.dispatch(queueActions.setQueue(queue))
         },
-        fetchQueue: (courseId) => {
-            return store.dispatch(fetchQueue(courseId))
+        fetchQueue: (courseId, user) => {
+            return store.dispatch(fetchQueue(courseId, user))
         }
     }
     

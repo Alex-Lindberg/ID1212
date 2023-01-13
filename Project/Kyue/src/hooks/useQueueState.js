@@ -8,8 +8,6 @@ const useQueueState = () => {
     return {
         queue: {
             get queue() {
-                // const localQueue = localStorage.getItem("Queue")
-                // return  localQueue ? JSON.parse(localQueue) : []
                 return queueState.queue
             },
             get error() {
@@ -18,8 +16,8 @@ const useQueueState = () => {
             setQueue: (queue) => {
                 dispatch(queueActions.setQueue(queue))
             },
-            fetchQueue: (queueId) => {
-                dispatch(fetchQueue(queueId))
+            fetchQueue: (queueId, user) => {
+                dispatch(fetchQueue(queueId, user))
             }
         },
     };

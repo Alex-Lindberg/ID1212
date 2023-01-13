@@ -9,7 +9,7 @@ const initialState = {
 
 export const fetchCourses = createAsyncThunk(
     "courses/fetchCourses",
-    async () => await getCourses()
+    async (user) => await getCourses(user)
 );
 
 const courseSlice = createSlice({

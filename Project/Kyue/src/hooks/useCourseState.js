@@ -8,8 +8,6 @@ const useCourseState = () => {
     return {
         courses: {
             get courses() {
-                // const localCourses = localStorage.getItem("courses")
-                // return  localCourses ? JSON.parse(localCourses) : []
                 return courseState.courses
             },
             get error() {
@@ -18,8 +16,8 @@ const useCourseState = () => {
             setCourses: (courses) => {
                 dispatch(courseActions.setCourses(courses))
             },
-            fetchCourses: () => {
-                dispatch(fetchCourses())
+            fetchCourses: (user) => {
+                dispatch(fetchCourses(user))
             }
         },
     };

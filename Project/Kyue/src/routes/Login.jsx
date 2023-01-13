@@ -1,11 +1,12 @@
 import { LoginForm, MessageBox, RegisterForm } from "../components";
 import { useState } from "react";
-import { login, register } from "../api";
+import { register } from "../api";
 import useUserState from "../hooks/useUserState";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import useMessageBox from "../hooks/useMessageBox";
 import "./Login.css";
+import { useEffect } from "react";
 
 const boxMessages = {
     REG_SUCCESS: "Registered Successfully",
@@ -25,19 +26,24 @@ const Login = (props) => {
     const [menuTab, toggleMenuTab] = useState(false);
     const [boxText, boxActive, setBoxText] = useMessageBox(5000, 1000);
 
-    const redirectToHome = useCallback(() => {
-        if (user && user?.isAuthenticated) navigate("/courses");
-    }, [user.currentUser]);
+    // const redirectToHome = useCallback(() => {
+    //     if (!user.isLoading && user.currentUser) 
+    //         navigate("/");
+    // }, [user.isLoading, user.currentUser]);
 
-    const handleSubmitLogin = async (event) => {
+    useEffect(() => {
+        if (user.currentUser)
+            navigate("/")
+    }, [navigate, user.currentUser])
+
+    const handleSubmitLogin = (event) => {
         event.preventDefault();
         if (notValidEmail()) {
             setBoxText(boxMessages.FAILED_EMAIL);
             return;
         }
         try {
-            await login({ email: email, password: password });
-            redirectToHome();
+            user.login({ email: email, password: password })
         } catch (e) {
             console.error(e);
         }

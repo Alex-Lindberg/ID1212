@@ -10,7 +10,6 @@ export const register = async (user) => {
         return axios
             .post("http://localhost:3000/api/users", user, config)
             .then(({ data }) => {
-                console.log("data :>> ", data);
                 if (!data.register_user)
                     console.error("Failed to register user");
                 else return true;
@@ -21,7 +20,7 @@ export const register = async (user) => {
     }
 };
 
-export const login = async (user) => {
+export const login = async (credentials) => {
     const config = {
         headers: {
             "Content-Type": "application/json",
@@ -29,11 +28,9 @@ export const login = async (user) => {
     };
     try {
         return axios
-            .post("http://localhost:3000/api/login", user, config)
+            .post("http://localhost:3000/api/login", credentials, config)
             .then(({ data }) => {
                 if (!data) console.error("Failed to retrieve user");
-                localStorage.setItem("user", JSON.stringify(data));
-                // window.location.pathname = "/courses";
                 return data;
             });
     } catch (error) {
@@ -42,49 +39,40 @@ export const login = async (user) => {
 };
 
 export const loadUser = async (user) => {
-    if (!user) user = localStorage.getItem("user");
-    if (!user) return null
+    if (!user) return null;
     const config = {
         headers: {
             "Content-Type": "application/json",
             user: JSON.stringify(user.currentUser),
-            sessionId: user.sessionId
+            sessionId: user.sessionId,
         },
     };
     try {
         return await axios
-                .get("http://localhost:3000/api/users/session", config)
-                .then(({ data }) => {
-                    localStorage.setItem("user", JSON.stringify(data));
-                    return data;
-                })
-            
+            .get("http://localhost:3000/api/users/session", config)
+            .then(({ data }) => {
+                return data;
+            });
     } catch (error) {
         console.error(error);
     }
 };
 
 export const logout = async (user) => {
-    if (!user) user = localStorage.getItem("user");
-    if (!user) window.location.pathname = "/login";
-    if(typeof user === String)
-        user = JSON.parse(user).user
+    if (!user) {
+        window.location.pathname = "/login";
+        return;
+    }
     const config = {
         headers: {
             "Content-Type": "application/json",
-            user: user,
-            sessionId: user.sessionId
+            user: JSON.stringify(user.currentUser),
+            sessionId: user.sessionId,
         },
     };
     try {
         await axios
             .post("http://localhost:3000/api/logout", {}, config)
-            .then(() => {
-                localStorage.removeItem("user");
-                localStorage.removeItem("courses");
-                window.location.pathname = "/login";
-                console.log("Removed");
-            })
             .catch((error) => {
                 console.error(error);
             });
