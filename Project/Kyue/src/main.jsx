@@ -15,9 +15,14 @@ import Queue from "./routes/Queue";
 import "./index.css";
 import { useEffect } from "react";
 import useUserState from "./hooks/useUserState";
+import { Navigate } from "react-router-dom";
 
 const router = createBrowserRouter(
     [
+        {
+            path: "/",
+            element: <Navigate to="/courses" />
+        },
         {
             path: "/courses",
             element: <Root />,
@@ -25,9 +30,9 @@ const router = createBrowserRouter(
         {
             path: "/courses/:courseId",
             element: <Queue />,
-            loader: ({params}) => {
-                return params.courseId
-            }
+            loader: ({ params }) => {
+                return params.courseId;
+            },
         },
         {
             path: "/login",
@@ -51,6 +56,7 @@ const LifeCycle = ({ children }) => {
     const dispatch = useDispatch();
     useEffect(() => {
         if (!dispatch || user) return;
+        
 
         dispatch(loadUser(user));
     }, [dispatch]);
