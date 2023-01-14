@@ -1,8 +1,11 @@
-import './Searchbar.css'
+import "./Searchbar.css";
 import { ReactComponent as SearchSvg } from "../assets/search.svg";
+import { useState } from "react";
+import { useEffect } from "react";
 
+const Searchbar = ({ list, setFilteredList }) => {
+    // const [filterWord, setFilterWord] = useState("");
 
-const Searchbar = () => {
     return (
         <div className="search-bar">
             <input
@@ -10,16 +13,26 @@ const Searchbar = () => {
                 type="text"
                 className="searchQueryInput"
                 placeholder="Search"
-                value=""
-                readOnly // remove later 
+                // value={filterWord}
+                onChange={(e) => {
+                    if (list !== []) {
+                        const lowerCased = e.target.value.toLowerCase();
+                        const filteredList = list.filter((item) => 
+                            item.id.toLowerCase().includes(lowerCased) ||
+                            item.title.toLowerCase().includes(lowerCased)
+                        );
+                        console.log('filteredList :>> ', filteredList);
+                        setFilteredList(filteredList)
+                    }
+                }}
             />
-            <button
+            <span
                 id="searchQuerySubmit"
                 type="submit"
                 className="searchQuerySubmit"
             >
                 <SearchSvg />
-            </button>
+            </span>
         </div>
     );
 };

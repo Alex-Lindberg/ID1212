@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useCallback } from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Navbar, Searchbar, AsyncDataWrapper } from "../components";
@@ -8,21 +10,24 @@ import "./CourseList.css";
 const CourseList = () => {
     const { user } = useUserState();
     const { courses } = useCourseState();
+    const [filteredList, setFilteredList] = useState(courses?.courses)
 
     useEffect(() => {
-        if (user.currentUser) courses.fetchCourses(user);
+        if (user.currentUser) {
+            courses.fetchCourses(user)
+        };
     }, [user.currentUser]);
 
     return (
         <div style={{ position: "relative" }} className="root-page">
             <Navbar username={user?.currentUser?.username} />
+            <AsyncDataWrapper data={courses?.courses} error={courses?.error}>
             <div className="list-header">
                 <div>Courses</div>
-                <Searchbar />
+                <Searchbar list={courses?.courses} setFilteredList={setFilteredList} />
             </div>
-            <AsyncDataWrapper data={courses?.courses} error={courses?.error}>
                 <div id="course-list-wrapper">
-                    {courses.courses.map((course, i) => {
+                    {filteredList.map((course, i) => {
                         return (
                             <Link
                                 key={i}

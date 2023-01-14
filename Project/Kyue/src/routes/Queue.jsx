@@ -43,7 +43,7 @@ const Queue = () => {
                         <tr className="course-item">
                             <th>#</th>
                             <th>Username</th>
-                            <th> Location</th>
+                            <th>Location</th>
                             <th>Comment</th>
                             <th>Status</th>
                         </tr>
