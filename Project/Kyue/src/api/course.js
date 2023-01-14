@@ -1,5 +1,4 @@
 import axios from "axios";
-import useUserState from "../hooks/useUserState";
 
 export const getCourses = async (user) => {
     try {
@@ -21,14 +20,15 @@ export const getCourses = async (user) => {
     }
 };
 
-export const getCourseItems = async (courseId, user) => {
+export const getCourseItems = async ({ courseId, user }) => {
     try {
-        if (!user) return;
-        if (!courseId) return;
+        console.log('courseId :>> ', courseId);
+        if (!user || !courseId) return;
+        console.log('Fuck you');
         const config = {
             headers: {
                 "Content-Type": "application/json",
-                user: JSON.stringify(user.currentUser),
+                user: JSON.stringify(user),
                 sessionId: user.sessionId,
             },
         };

@@ -29,6 +29,7 @@ const router = createBrowserRouter(
             path: "/courses/:courseId",
             element: <Queue />,
             loader: ({ params }) => {
+                console.log('params :>> ', params);
                 return params.courseId;
             },
         },

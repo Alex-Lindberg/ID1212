@@ -16,8 +16,8 @@ const useQueueState = () => {
             setQueue: (queue) => {
                 dispatch(queueActions.setQueue(queue))
             },
-            fetchQueue: (queueId, user) => {
-                dispatch(fetchQueue(queueId, user))
+            fetchQueue: (params) => {
+                dispatch(fetchQueue(params))
             }
         },
     };

@@ -3,13 +3,13 @@ import { getCourseItems } from "../api";
 
 const initialState = {
     loading: false,
-    queue: null,
+    queue: [],
     error: "",
 };
 
 export const fetchQueue = createAsyncThunk(
     "queue/fetchQueue",
-    async (courseId, user) => await getCourseItems(courseId, user)
+    async (params) => await getCourseItems(params)
 );
 
 const queueSlice = createSlice({
@@ -31,11 +31,7 @@ const queueSlice = createSlice({
         });
         builder.addCase(fetchQueue.rejected, (state, action) => {
             state.loading = false;
-            state.queue = {
-                id: "",
-                title: "",
-                status: "",
-            };
+            state.queue = []
             state.error = action.error.message;
         });
     },

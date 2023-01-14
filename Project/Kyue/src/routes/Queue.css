@@ -49,7 +49,7 @@
     cursor: pointer;
     text-decoration: none;
     color: inherit;
-
+    
     background-color: rgba(100, 100, 100, 0.4);
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -58,6 +58,21 @@
 
     padding: 1.5em;
 }
+.queue-container .course-item td {
+    white-space: nowrap;
+    overflow: hidden;
+    width: calc(100% / 4);
+    text-overflow: ellipsis;
+}
+.queue-container .course-item td:first-child {
+    width: 12%;
+}.queue-container .course-item td:nth-child(2) {
+    width: 15%;
+}
+.queue-container .course-item td:last-child {
+    width: 12%;
+}
+
 
 .queue-container .course-item[aria-checked="true"] {
     animation: pulse-animation 10s infinite ease;

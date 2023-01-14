@@ -1,7 +1,6 @@
 import useUserState from "../hooks/useUserState";
-import { useDispatch } from "react-redux";
+import { useDispatch, useStore } from "react-redux";
 import { useEffect } from "react";
-import { fetchQueue } from "../reducers/queueReducer";
 import { AsyncDataWrapper, Navbar } from "../components";
 import useQueueState from "../hooks/useQueueState";
 import { useLoaderData } from "react-router-dom";
@@ -13,12 +12,14 @@ const Queue = () => {
     const { user } = useUserState();
     const { queue } = useQueueState();
     const courseId = useLoaderData();
-    const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!dispatch || queue?.queue) return;
-        dispatch(fetchQueue(courseId, user));
-    }, [dispatch, queue?.queue]);
+        console.log("courseId :>> ", courseId);
+        if (courseId && !user?.currentUser) return;
+        queue.fetchQueue({ courseId: "ID1212", user: user.currentUser });
+    }, [courseId, !user?.currentUser]);
+
+    useEffect(() => {}, [queue?.queue]);
 
     return (
         <div style={{ position: "relative" }} className="queue-page">
@@ -39,31 +40,34 @@ const Queue = () => {
                 <div className="line-break" />
                 <AsyncDataWrapper data={queue?.queue} error={queue?.error}>
                     <QueueForm className="form-container" />
-                    <div className="queue-container">
-                        {queue?.queue && queue?.queue !== [] ? (
-                            queue?.queue.map((item) => {
-                                return (
-                                    <div
-                                        className="course-item"
-                                        aria-checked={
-                                            item?.status !== "Waiting"
-                                        }
-                                    >
-                                        <div>
-                                            <span>{item?.username + " "}</span>
-                                            <span>{item?.location}</span>
-                                            <span>{item?.comment}</span>
-                                            <span>{item?.status}</span>
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        ) : (
-                            <div className="no-one-in-queue-msg">
-                                No one is currently in the queue.
-                            </div>
-                        )}
-                    </div>
+                    <table className="queue-container">
+                        <thead></thead>
+                        <tbody>
+                            {queue?.queue && queue?.queue !== [] ? (
+                                queue?.queue.map((item, i) => {
+                                    return (
+                                        <tr
+                                            key={i}
+                                            className="course-item"
+                                            aria-checked={
+                                                item?.status !== "Waiting"
+                                            }
+                                        >
+                                            <td>{item?.username + " "}</td>
+                                            <td>{item?.location}</td>
+                                            <td>{item?.comment}</td>
+                                            {/* <td>{item?.status}</td> */}
+                                            <td>text text text text text text text text text text </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <div className="no-one-in-queue-msg">
+                                    No one is currently in the queue.
+                                </div>
+                            )}
+                        </tbody>
+                    </table>
                 </AsyncDataWrapper>
             </div>
         </div>

@@ -59,8 +59,8 @@ const storeInterface = {
         setQueue: (queue) => {
             return store.dispatch(queueActions.setQueue(queue))
         },
-        fetchQueue: (courseId, user) => {
-            return store.dispatch(fetchQueue(courseId, user))
+        fetchQueue: (params) => {
+            return store.dispatch(fetchQueue(params))
         }
     }
     
