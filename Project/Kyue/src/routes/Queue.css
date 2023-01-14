@@ -55,23 +55,35 @@
     border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 3px;
     box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
-
+    
     padding: 1.5em;
 }
-.queue-container .course-item td {
+.queue-container thead .course-item {
+    background-color: rgba(150, 120, 120, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    cursor: default;
+}
+.queue-container .course-item > * {
     white-space: nowrap;
     overflow: hidden;
     width: calc(100% / 4);
     text-overflow: ellipsis;
+    text-align: left;
 }
-.queue-container .course-item td:first-child {
-    width: 12%;
+.queue-container .course-item > *:first-child {
+    width: 5%;
 }
-.queue-container .course-item td:nth-child(2) {
-    width: 15%;
+.queue-container .course-item > *:nth-child(2) {
+    width: 20%;
 }
-.queue-container .course-item td:last-child {
-    width: 12%;
+.queue-container .course-item > *:nth-child(3) {
+    width: 30%;
+}
+.queue-container .course-item > *:nth-child(4) {
+    width: 35%;
+}
+.queue-container .course-item > *:last-child {
+    width: 10%;
 }
 
 .queue-container .course-item[aria-checked="true"] {

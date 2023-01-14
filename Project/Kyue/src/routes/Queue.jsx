@@ -7,7 +7,6 @@ import { useLoaderData } from "react-router-dom";
 import QueueForm from "../components/QueueForm";
 
 import "./Queue.css";
-// import "./Queue2.css";
 
 const Queue = () => {
     const { user } = useUserState();
@@ -15,9 +14,8 @@ const Queue = () => {
     const courseId = useLoaderData();
 
     useEffect(() => {
-        console.log("courseId :>> ", courseId);
         if (courseId && !user?.currentUser) return;
-        queue.fetchQueue({ courseId: "ID1212", user: user.currentUser });
+        queue.fetchQueue({ courseId: courseId, user: user.currentUser });
     }, [courseId, !user?.currentUser]);
 
     useEffect(() => {}, [queue?.queue]);
@@ -41,7 +39,15 @@ const Queue = () => {
                 <div className="line-break" />
                 <QueueForm className="form-container" />
                 <table className="queue-container">
-                    <thead></thead>
+                    <thead>
+                        <tr className="course-item">
+                            <th>#</th>
+                            <th>Username</th>
+                            <th> Location</th>
+                            <th>Comment</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <AsyncDataWrapper
                             data={queue?.queue}
@@ -57,12 +63,10 @@ const Queue = () => {
                                                 item?.status !== "Waiting"
                                             }
                                         >
+                                            <td>{i + 1}</td>
                                             <td>{item?.username + " "}</td>
                                             <td>{item?.location}</td>
-                                            {/* <td>{item?.comment}</td> */}
-                                            <td>
-                                                text text text text text text{" "}
-                                            </td>
+                                            <td>{item?.comment}</td>
                                             <td>{item?.status}</td>
                                         </tr>
                                     );
