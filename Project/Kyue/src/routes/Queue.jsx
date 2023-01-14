@@ -7,6 +7,7 @@ import { useLoaderData } from "react-router-dom";
 import QueueForm from "../components/QueueForm";
 
 import "./Queue.css";
+// import "./Queue2.css";
 
 const Queue = () => {
     const { user } = useUserState();
@@ -38,11 +39,14 @@ const Queue = () => {
                     </span>
                 </div>
                 <div className="line-break" />
-                <AsyncDataWrapper data={queue?.queue} error={queue?.error}>
-                    <QueueForm className="form-container" />
-                    <table className="queue-container">
-                        <thead></thead>
-                        <tbody>
+                <QueueForm className="form-container" />
+                <table className="queue-container">
+                    <thead></thead>
+                    <tbody>
+                        <AsyncDataWrapper
+                            data={queue?.queue}
+                            error={queue?.error}
+                        >
                             {queue?.queue && queue?.queue !== [] ? (
                                 queue?.queue.map((item, i) => {
                                     return (
@@ -55,9 +59,11 @@ const Queue = () => {
                                         >
                                             <td>{item?.username + " "}</td>
                                             <td>{item?.location}</td>
-                                            <td>{item?.comment}</td>
-                                            {/* <td>{item?.status}</td> */}
-                                            <td>text text text text text text text text text text </td>
+                                            {/* <td>{item?.comment}</td> */}
+                                            <td>
+                                                text text text text text text{" "}
+                                            </td>
+                                            <td>{item?.status}</td>
                                         </tr>
                                     );
                                 })
@@ -66,9 +72,9 @@ const Queue = () => {
                                     No one is currently in the queue.
                                 </div>
                             )}
-                        </tbody>
-                    </table>
-                </AsyncDataWrapper>
+                        </AsyncDataWrapper>
+                    </tbody>
+                </table>
             </div>
         </div>
     );

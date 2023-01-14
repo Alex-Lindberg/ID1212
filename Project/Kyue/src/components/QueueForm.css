@@ -1,6 +1,5 @@
 .form-container {
-    grid-area: form;
-    grid-row:  row-start 4;
+    grid-row: row-start 4;
     grid-column: 2 / span 2;
 
     box-sizing: border-box;
@@ -23,11 +22,11 @@
     margin-top: 0;
     border-radius: 0;
 }
-.queue-button-wrapper > input:first-child{
+.queue-button-wrapper > input:first-child {
     border-radius: 3px 0 0 3px;
-    background-color:rgb(67, 136, 136);
+    background-color: rgb(67, 136, 136);
 }
-.queue-button-wrapper > input:last-child{
+.queue-button-wrapper > input:last-child {
     border-left: 1px var(--bg-0) solid;
     background-color: rgb(170, 75, 50);
     border-radius: 0 3px 3px 0;
@@ -45,9 +44,25 @@
     }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 810px) {
     .form-container {
-        position: relative;
+        margin: auto;
         margin-bottom: 2em;
+    }
+    .form-container .location-input,
+    .form-container .comment-input {
+        max-width: 80vh;
+    }
+
+    .form-container .queue-button-wrapper,
+    .form-container label {
+        padding-left: 4em;
+        padding-right: 4em;
+    }
+    
+    .form-container .location-input,
+    .form-container .comment-input,
+    .form-container .queue-button-wrapper {
+        width: 100%;
     }
 }
