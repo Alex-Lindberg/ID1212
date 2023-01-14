@@ -29,6 +29,7 @@
 
 .nav-welcome {
     padding-right: 2em;
+    cursor: default;
 }
 .nav-menu-items {
     color: inherit;
@@ -39,8 +40,22 @@
     padding-right: 1em;
     font-weight: 300;
     text-decoration: none;
+    transition: color 300ms ease-in-out;
     cursor: pointer;
 }
+
+.nav-menu-items:hover {
+    color: orange;
+    transition: 300ms ease-in-out;
+}
+
 .nav-menu-items:not(:last-child) {
-    border-right: solid 2px rgba(255,255,255,0.5);
+    border-right: solid 2px rgba(255, 255, 255, 0.5);
+}
+
+@media screen and (max-width: 1000px) {
+    .nav-welcome {
+        font-size: var(--font-size-1);
+        line-height: var(--line-h-3);
+    }
 }

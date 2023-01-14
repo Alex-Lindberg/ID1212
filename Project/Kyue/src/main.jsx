@@ -1,19 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
-import Root from "./routes/Root";
+import { Login, Root, Queue, CourseList } from "./routes";
+import { useUserState, useCourseState } from "./hooks";
 import ErrorPage from "./errorPage";
-import { Login } from "./routes";
-import { loadUser } from "./api";
 import store from "./store";
-import Queue from "./routes/Queue";
-import "./index.css";
-import { useEffect } from "react";
-import useUserState from "./hooks/useUserState";
-import useCourseState from "./hooks/useCourseState";
-import CourseList from "./routes/CourseList";
 
+import "./index.css";
 
 const router = createBrowserRouter(
     [
@@ -29,7 +23,6 @@ const router = createBrowserRouter(
             path: "/courses/:courseId",
             element: <Queue />,
             loader: ({ params }) => {
-                console.log('params :>> ', params);
                 return params.courseId;
             },
         },

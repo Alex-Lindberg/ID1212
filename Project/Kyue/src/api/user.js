@@ -59,7 +59,7 @@ export const loadUser = async (user) => {
 };
 
 export const logout = async (user) => {
-    if (!user) {
+    if (!user || !user.currentUser) {
         window.location.pathname = "/login";
         return;
     }

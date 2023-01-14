@@ -1,7 +1,7 @@
 import { useRouteError } from "react-router-dom";
+import { useUserState } from "./hooks";
 import { loadUser } from "./api";
 import "./errorPage.css";
-import useUserState from "./hooks/useUserState";
 
 export default function ErrorPage() {
     const error = useRouteError();

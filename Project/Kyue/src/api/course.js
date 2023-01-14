@@ -22,9 +22,7 @@ export const getCourses = async (user) => {
 
 export const getCourseItems = async ({ courseId, user }) => {
     try {
-        console.log('courseId :>> ', courseId);
         if (!user || !courseId) return;
-        console.log('Fuck you');
         const config = {
             headers: {
                 "Content-Type": "application/json",

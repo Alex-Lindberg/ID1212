@@ -1,12 +1,9 @@
 import { LoginForm, MessageBox, RegisterForm } from "../components";
-import { useState } from "react";
-import { register } from "../api";
-import useUserState from "../hooks/useUserState";
-import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useMessageBox from "../hooks/useMessageBox";
+import { useEffect, useState } from "react";
+import { register } from "../api";
+import { useUserState, useMessageBox } from "../hooks";
 import "./Login.css";
-import { useEffect } from "react";
 
 const boxMessages = {
     REG_SUCCESS: "Registered Successfully",
@@ -27,14 +24,13 @@ const Login = (props) => {
     const [boxText, boxActive, setBoxText] = useMessageBox(5000, 1000);
 
     // const redirectToHome = useCallback(() => {
-    //     if (!user.isLoading && user.currentUser) 
+    //     if (!user.isLoading && user.currentUser)
     //         navigate("/");
     // }, [user.isLoading, user.currentUser]);
 
     useEffect(() => {
-        if (user.currentUser)
-            navigate("/")
-    }, [navigate, user.currentUser])
+        if (user.currentUser) navigate("/");
+    }, [navigate, user.currentUser]);
 
     const handleSubmitLogin = (event) => {
         event.preventDefault();
@@ -43,7 +39,7 @@ const Login = (props) => {
             return;
         }
         try {
-            user.login({ email: email, password: password })
+            user.login({ email: email, password: password });
         } catch (e) {
             console.error(e);
         }

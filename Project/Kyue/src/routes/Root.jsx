@@ -1,6 +1,6 @@
-import useUserState from "../hooks/useUserState";
-import "../index.css";
+import { useUserState } from "../hooks";
 import { Navigate } from "react-router-dom";
+import "../index.css";
 
 const Root = () => {
     const { user } = useUserState();

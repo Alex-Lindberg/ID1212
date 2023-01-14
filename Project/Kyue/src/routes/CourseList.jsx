@@ -1,20 +1,16 @@
-import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import useUserState from "../hooks/useUserState";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Navbar, Searchbar, AsyncDataWrapper } from "../components";
+import { useUserState, useCourseState } from "../hooks";
 import "../index.css";
 import "./CourseList.css";
-import Searchbar from "../components/Searchbar";
-import useCourseState from "../hooks/useCourseState";
-import AsyncDataWrapper from "../components/AsyncDataWrapper";
-import { Link } from "react-router-dom";
 
 const CourseList = () => {
     const { user } = useUserState();
     const { courses } = useCourseState();
 
     useEffect(() => {
-        if(user.currentUser)
-            courses.fetchCourses(user);
+        if (user.currentUser) courses.fetchCourses(user);
     }, [user.currentUser]);
 
     return (
