@@ -1,4 +1,5 @@
 import axios from "axios";
+import routes from "../localization/routes";
 
 export const enqueue = async ({ user, courseId, location, comment }) => {
     try {
@@ -17,7 +18,7 @@ export const enqueue = async ({ user, courseId, location, comment }) => {
         };
         return axios
             .post(
-                `http://localhost:3000/api/courses/${courseId}/queue`,
+                `${routes.HTTP_API}/api/courses/${courseId}/queue`,
                 body,
                 config
             )
@@ -25,8 +26,11 @@ export const enqueue = async ({ user, courseId, location, comment }) => {
                 return data;
             })
             .catch(console.error);
-    } catch (error) {
-        console.error(error);
+    } catch (err) {
+        if (!err.response) {
+            throw err;
+        }
+        return rejectWithValue(err.response.data);
     }
 };
 
@@ -42,7 +46,7 @@ export const dequeue = async ({ user, courseId }) => {
         };
         return axios
             .delete(
-                `http://localhost:3000/api/courses/${courseId}/queue`,
+                `${routes.HTTP_API}/api/courses/${courseId}/queue`,
                 config
             )
             .then(({ data }) => {
@@ -68,12 +72,15 @@ export const updateQueueItem = async ({ courseId, user }) => {
             },
         };
         return axios
-            .put(`http://localhost:3000/api/courses/${courseId}/queue`, config)
+            .put(`${routes.HTTP_API}/api/courses/${courseId}/queue`, config)
             .then(({ data }) => {
                 return data;
             })
             .catch(console.error);
-    } catch (error) {
-        console.error(error);
+    } catch (err) {
+        if (!err.response) {
+            throw err;
+        }
+        return rejectWithValue(err.response.data);
     }
 };

@@ -1,4 +1,5 @@
 import axios from "axios";
+import routes from "../localization/routes";
 
 export const register = async (user) => {
     const config = {
@@ -8,7 +9,7 @@ export const register = async (user) => {
     };
     try {
         return axios
-            .post("http://localhost:3000/api/users", user, config)
+            .post(`${routes.HTTP_API}/api/users`, user, config)
             .then(({ data }) => {
                 if (!data.register_user)
                     console.error("Failed to register user");
@@ -28,7 +29,7 @@ export const login = async (credentials) => {
     };
     try {
         return axios
-            .post("http://localhost:3000/api/login", credentials, config)
+            .post(`${routes.HTTP_API}/api/login`, credentials, config)
             .then(({ data }) => {
                 if (!data) console.error("Failed to retrieve user");
                 return data;
@@ -49,7 +50,7 @@ export const loadUser = async (user) => {
     };
     try {
         return await axios
-            .get("http://localhost:3000/api/users/session", config)
+            .get(`${routes.HTTP_API}/api/users/session`, config)
             .then(({ data }) => {
                 return data;
             });
@@ -72,7 +73,7 @@ export const logout = async (user) => {
     };
     try {
         await axios
-            .post("http://localhost:3000/api/logout", {}, config)
+            .post(`${routes.HTTP_API}/api/logout`, {}, config)
             .catch((error) => {
                 console.error(error);
             });

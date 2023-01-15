@@ -1,4 +1,5 @@
 import axios from "axios";
+import routes from "../localization/routes";
 
 export const getCourses = async (user) => {
     try {
@@ -10,7 +11,7 @@ export const getCourses = async (user) => {
             },
         };
         return axios
-            .get("http://localhost:3000/api/courses", config)
+            .get(`${routes.HTTP_API}/api/courses`, config)
             .then(({ data }) => {
                 return data;
             })
@@ -31,7 +32,7 @@ export const getCourseItems = async ({ courseId, user }) => {
             },
         };
         return axios
-            .get(`http://localhost:3000/api/courses/${courseId}`, config)
+            .get(`${routes.HTTP_API}/api/courses/${courseId}`, config)
             .then(({ data }) => {
                 return data;
             })
