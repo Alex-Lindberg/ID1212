@@ -47,6 +47,9 @@ const storeInterface = {
         },
         fetchCourses: (user) => {
             return store.dispatch(fetchCourses(user))
+        },
+        createCourse: (params) => {
+            return store.dispatch(createCourse(params))
         }
     },
     queue: {

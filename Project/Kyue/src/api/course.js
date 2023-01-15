@@ -41,3 +41,29 @@ export const getCourseItems = async ({ courseId, user }) => {
         console.error(error);
     }
 };
+
+export const createCourse = async ({courseId, title, user}) => {
+    try {
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                user: JSON.stringify(user),
+                sessionId: user.sessionId,
+            },
+        };
+        return axios
+            .post(`${routes.HTTP_API}/api/courses`, {
+                courseId: courseId,
+                title: title,
+            }, config)
+            .then(({ data }) => {
+                return data;
+            })
+            .catch(console.error);
+    } catch (err) {
+        if (!err.response) {
+            throw err;
+        }
+        return rejectWithValue(err.response.data);
+    }
+};

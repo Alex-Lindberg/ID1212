@@ -5,7 +5,7 @@
         - [x] backend
         - [x] frontend
     - [x] Login redirect
-    - [ ] Refactorera userState till att inte använda Local Storage
+    - [x] Refactorera userState till att inte använda Local Storage
 
 - [ ] Session
     - [x] Spärra på api nivå
@@ -17,13 +17,13 @@
         - [x] frontend
     - [x] Uppdatera QI kommentar
         - [x] backend
-        - [ ] frontend
+        - [x] frontend
     - [x] Updatera QI status
         - [x] backend
-        - [ ] frontend
+        - [x] frontend
     - [x] Updatera QI location
         - [x] backend
-        - [ ] frontend
+        - [x] frontend
     - [ ] Antal personer i queue
         - [ ] backend
         - [ ] frontend

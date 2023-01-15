@@ -1,3 +1,7 @@
+.list-header-wrapper {
+    display: flex;
+    flex-direction: column;
+}
 .list-header {
     display: flex;
     flex-direction: row;
@@ -11,7 +15,22 @@
     min-width: 450px;
     width: 50%;
 }
-
+.list-header > div {
+    display: flex;
+    align-items: center;
+}
+.list-header > div > span {
+    padding-right: 1em;
+}
+.add-course-button {
+    stroke: white;
+    background-color: transparent;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
 #course-list-wrapper {
     display: flex;
     gap: 1em;

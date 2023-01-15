@@ -1,0 +1,8 @@
+<svg class='person' viewBox='0 0 100 100'>
+<g id="person"> 
+    <path d="M8 96 C 8 88, 14 68, 34 58"></path>
+    <path d="M92 96 C 92 88, 86 68, 66 58"></path>
+    <line x1="8" y1="96" x2="92" y2="96"></line>
+    <circle cx="50" cy="36" r="26"></circle>
+  </g>
+</svg>

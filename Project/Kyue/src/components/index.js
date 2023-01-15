@@ -1,4 +1,5 @@
 export { default as AsyncDataWrapper } from "./AsyncDataWrapper";
+export { default as CreateCourseForm } from "./CreateCourseForm";
 export { default as LoginForm } from "./LoginForm";
 export { default as LogoutButton } from "./LogoutButton";
 export { default as MessageBox } from "./MessageBox";
