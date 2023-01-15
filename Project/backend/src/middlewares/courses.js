@@ -133,7 +133,7 @@ const getCourseItems = async (req, res, next) => {
     try {
         const courseId = req.params.courseId || utils.getCourse(req).id;
         const courses = await query(
-            `SELECT username, location, comment, status 
+            `SELECT user_id, course_id, username, location, comment, status 
             FROM queue_item 
             INNER JOIN users ON users.id = user_id 
             WHERE course_id='${courseId}'`

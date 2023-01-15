@@ -1,7 +1,7 @@
 import { login, loadUser, userActions } from "../reducers/userReducer";
 import store from ".";
 import { courseActions, fetchCourses } from "../reducers/courseReducer";
-import { fetchQueue, queueActions } from "../reducers/queueReducer";
+import { dequeue, enqueue, fetchQueue, queueActions, updateQueueItem } from "../reducers/queueReducer";
 // import { loadUser } from "../api";
 
 const storeInterface = {
@@ -61,6 +61,15 @@ const storeInterface = {
         },
         fetchQueue: (params) => {
             return store.dispatch(fetchQueue(params))
+        },
+        enqueue: (params) => {
+            return store.dispatch(enqueue(params))
+        },
+        dequeue: (params) => {
+            return store.dispatch(dequeue(params))
+        },
+        updateQueueItems: (params) => {
+            return store.dispatch(updateQueueItem(params))
         }
     }
     

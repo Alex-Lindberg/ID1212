@@ -1,36 +1,37 @@
 import "./QueueForm.css";
 import "../routes/Queue.css";
 
-const QueueForm = ({ className }) => {
+const QueueForm = (props) => {
     return (
-        <form className={className}>
+        <form className={props.className}>
             <label htmlFor="location-input">Location</label>
-            <input id="location-input" className="location-input"></input>
+            <input id="location-input" className="location-input" onChange={(e) => {
+                props.setLocation(e.target.value)
+            }} />
 
             <label htmlFor="comment-input">Comment</label>
-            <input id="comment-input" className="comment-input"></input>
-
-            {/* <label htmlFor="status-input"></label>
-                <input id="status-input"></input> */}
+            <input id="comment-input" className="comment-input" onChange={(e) => {
+                props.setComment(e.target.value)
+            }} />
             <div className="queue-button-wrapper">
                 <input
                     type="submit"
                     id="submit-input"
                     className="submit-input"
-                    value="Enqueue"
+                    value={!props.inQueue ? "Enqueue" : "Dequeue"}
                     onClick={(e) => {
                         e.preventDefault();
-                        console.log("Submitted");
+                        props.handleSubmit();
                     }}
                 />
                 <input
                     type="submit"
                     id="submit-input"
                     className="submit-input"
-                    value="Recieving Help"
+                    value={!props.status ? "Receiving Help" : "Set Waiting"}
                     onClick={(e) => {
                         e.preventDefault();
-                        console.log("Submitted");
+                        props.toggleStatus();
                     }}
                 />
             </div>

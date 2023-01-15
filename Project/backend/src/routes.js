@@ -70,6 +70,26 @@ const courseRoutes = (app) => {
         coursesMiddleware.deleteCourse,
         responseMiddleware.sendResponse("courses")
     );
+    app.get(
+        "/api/courses",
+        coursesMiddleware.initLocals,
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
+        coursesMiddleware.getCourses,
+        responseMiddleware.sendResponse("courses")
+    );
+    app.get(
+        "/api/courses/:courseId",
+        coursesMiddleware.initLocals,
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
+        coursesMiddleware.checkCourseExist,
+        coursesMiddleware.getCourseItems,
+        responseMiddleware.sendResponse("courses")
+    );
+    
     app.post(
         "/api/courses/:courseId/queue",
         queueMiddleware.initLocals,
@@ -77,7 +97,7 @@ const courseRoutes = (app) => {
         authMiddleware.getSession,
         authMiddleware.validateSession,
         queueMiddleware.enqueue,
-        responseMiddleware.sendResponse("queue")
+        responseMiddleware.sendResponse("queueItem")
     );
     app.delete(
         "/api/courses/:courseId/queue",
@@ -86,7 +106,7 @@ const courseRoutes = (app) => {
         authMiddleware.getSession,
         authMiddleware.validateSession,
         queueMiddleware.dequeue,
-        responseMiddleware.sendResponse("queue")
+        responseMiddleware.sendResponse("queueItem")
     );
     app.patch(
         "/api/courses/:courseId/queue/:queueItemId",
@@ -95,7 +115,7 @@ const courseRoutes = (app) => {
         authMiddleware.getSession,
         authMiddleware.validateSession,
         queueMiddleware.setItem,
-        responseMiddleware.sendResponse("queue")
+        responseMiddleware.sendResponse("queueItem")
     );
     app.post(
         "/api/courses/:courseId/admin",
@@ -116,25 +136,6 @@ const courseRoutes = (app) => {
         coursesMiddleware.isAdministrator,
         coursesMiddleware.setCourseAdministrator(false),
         responseMiddleware.sendResponse("queue")
-    );
-    app.get(
-        "/api/courses",
-        coursesMiddleware.initLocals,
-        usersMiddleware.getUserByEmail,
-        authMiddleware.getSession,
-        authMiddleware.validateSession,
-        coursesMiddleware.getCourses,
-        responseMiddleware.sendResponse("courses")
-    );
-    app.get(
-        "/api/courses/:courseId",
-        coursesMiddleware.initLocals,
-        usersMiddleware.getUserByEmail,
-        authMiddleware.getSession,
-        authMiddleware.validateSession,
-        coursesMiddleware.checkCourseExist,
-        coursesMiddleware.getCourseItems,
-        responseMiddleware.sendResponse("courses")
     );
 };
 

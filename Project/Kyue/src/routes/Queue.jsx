@@ -1,5 +1,4 @@
 import useUserState from "../hooks/useUserState";
-import { useDispatch, useStore } from "react-redux";
 import { useEffect } from "react";
 import { AsyncDataWrapper, Navbar } from "../components";
 import useQueueState from "../hooks/useQueueState";
@@ -7,11 +6,40 @@ import { useLoaderData } from "react-router-dom";
 import QueueForm from "../components/QueueForm";
 
 import "./Queue.css";
+import { useState } from "react";
 
 const Queue = () => {
     const { user } = useUserState();
     const { queue } = useQueueState();
     const courseId = useLoaderData();
+
+    const [location, setLocation] = useState("");
+    const [comment, setComment] = useState("");
+    const [status, setStatus] = useState(false);
+    const [inQueue, setInQueue] = useState(false);
+
+    const toggleStatus = () => {
+        setStatus(!status);
+    };
+
+    const handleSubmit = () => {
+        if (!courseId || !user?.currentUser) return;
+        if (!inQueue && location !== "") {
+            queue.enqueue({
+                user: user?.currentUser,
+                courseId: courseId,
+                location: location,
+                comment: comment,
+            });
+            setInQueue(!inQueue);
+        } else if (inQueue) {
+            queue.dequeue({ user: user.currentUser, courseId: courseId });
+            setInQueue(!inQueue);
+        }
+    };
+    const handleRecieveHelp = () => {
+        console.log("Getting help");
+    };
 
     useEffect(() => {
         if (courseId && !user?.currentUser) return;
@@ -37,7 +65,16 @@ const Queue = () => {
                     </span>
                 </div>
                 <div className="line-break" />
-                <QueueForm className="form-container" />
+                <QueueForm
+                    className="form-container"
+                    inQueue={inQueue}
+                    status={status}
+                    setLocation={setLocation}
+                    setComment={setComment}
+                    toggleStatus={toggleStatus}
+                    handleSubmit={handleSubmit}
+                    handleRecieveHelp={handleRecieveHelp}
+                />
                 <table className="queue-container">
                     <thead>
                         <tr className="course-item">
@@ -53,21 +90,19 @@ const Queue = () => {
                             data={queue?.queue}
                             error={queue?.error}
                         >
-                            {queue?.queue && queue?.queue !== [] ? (
+                            {queue?.queue ? (
                                 queue?.queue.map((item, i) => {
                                     return (
                                         <tr
                                             key={i}
                                             className="course-item"
-                                            aria-checked={
-                                                item?.status !== "Waiting"
-                                            }
+                                            aria-checked={item?.status}
                                         >
                                             <td>{i + 1}</td>
                                             <td>{item?.username + " "}</td>
                                             <td>{item?.location}</td>
                                             <td>{item?.comment}</td>
-                                            <td>{item?.status}</td>
+                                            <td>{`${item?.status}`}</td>
                                         </tr>
                                     );
                                 })

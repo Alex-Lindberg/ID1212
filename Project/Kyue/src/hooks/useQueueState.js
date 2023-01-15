@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { queueActions, fetchQueue } from "../reducers/queueReducer";
+import { dequeue, enqueue, queueActions, fetchQueue  } from "../reducers/queueReducer";
 
 const useQueueState = () => {
     const queueState = useSelector((state) => state.queueState);
@@ -18,6 +18,15 @@ const useQueueState = () => {
             },
             fetchQueue: (params) => {
                 dispatch(fetchQueue(params))
+            },
+            enqueue: (params) => {
+                return dispatch(enqueue(params))
+            },
+            dequeue: (params) => {
+                return dispatch(dequeue(params))
+            },
+            updateQueueItems: (params) => {
+                return dispatch(updateQueueItem(params))
             }
         },
     };
