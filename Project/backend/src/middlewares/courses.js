@@ -90,7 +90,15 @@ const deleteCourse = async (req, res, next) => {
 
 const getCourses = async (req, res, next) => {
     try {
-        const courses = await query(`SELECT * FROM courses`);
+        const courses = await query(
+            `SELECT courses.*,
+                COALESCE (array_agg(administrators.user_id) 
+                    filter (where administrators.user_id is not null), 
+                    '{}') AS administrators
+            FROM courses
+            LEFT JOIN administrators ON administrators.course_id = id
+            GROUP BY id;`
+        );
         res.locals.courses = courses.rows;
         return next();
     } catch (error) {
@@ -101,8 +109,16 @@ const getCourses = async (req, res, next) => {
 const getCourse = async (req, res, next) => {
     try {
         const courseId = req.params.courseId || utils.getCourse(req).id;
+        // Selects the course and the id's of all administrators
         const courses = await query(
-            `SELECT * FROM courses WHERE id='${courseId}'`
+            `SELECT courses.*,
+                COALESCE (array_agg(administrators.user_id) 
+                    filter (where administrators.user_id is not null), 
+                    '{}') AS administrators
+            FROM courses
+            LEFT JOIN administrators ON administrators.course_id = id
+            WHERE id='${courseId}'
+            GROUP BY id;`
         );
         if (!courses?.rows[0]) {
             return res.status(404).send(`No course found with id ${courseId}`);
@@ -155,5 +171,5 @@ module.exports = {
     setCourseAdministrator,
     isAdministrator,
     checkCourseExist,
-    getCourseItems
+    getCourseItems,
 };

@@ -22,6 +22,10 @@
 .list-header > div > span {
     padding-right: 1em;
 }
+.course-list-page .message-box {
+    margin-top: 15em;
+    position: absolute;
+}
 .add-course-button {
     stroke: white;
     background-color: transparent;

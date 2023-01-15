@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS queue_item (
 
 CREATE TABLE IF NOT EXISTS administrators (
     user_id UUID NOT NULL REFERENCES users (id),
-    course_id text NOT NULL REFERENCES courses (id)
+    course_id text NOT NULL REFERENCES courses (id),
+    PRIMARY KEY (user_id, course_id)
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
@@ -188,8 +189,6 @@ CREATE OR REPLACE FUNCTION update_queue_item(
  END
  $$
  LANGUAGE plpgsql;
-
-
 
 -- related trigger:
 -- CREATE OR REPLACE FUNCTION notify_queue_item_event()

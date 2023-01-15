@@ -7,8 +7,14 @@ import {
     Searchbar,
     AsyncDataWrapper,
     CreateCourseForm,
+    MessageBox,
 } from "../components";
-import { useUserState, useCourseState, useQueueState } from "../hooks";
+import {
+    useUserState,
+    useCourseState,
+    useQueueState,
+    useMessageBox,
+} from "../hooks";
 import "../index.css";
 import "./CourseList.css";
 
@@ -16,6 +22,8 @@ const CourseList = () => {
     const { user } = useUserState();
     const { courses } = useCourseState();
     const { queue } = useQueueState();
+
+    // const [boxText, boxActive, setBoxText] = useMessageBox(5000, 1000);
     const [filteredList, setFilteredList] = useState([]);
 
     const [newCourseId, setNewCourseId] = useState("");
@@ -25,7 +33,7 @@ const CourseList = () => {
     const submitNewCourse = () => {
         if (!user?.currentUser || !courses?.courses) return;
         if (newCourseId === "" || newCourseTitle === "") return;
-        console.log('newCourse :>> ', {
+        console.log("newCourse :>> ", {
             courseId: newCourseId,
             title: newCourseTitle,
             user: user.currentUser,
@@ -33,14 +41,16 @@ const CourseList = () => {
         if (
             courses.courses.filter(
                 (item) =>
-                    item.id.toLowerCase().includes(newCourseId) ||
-                    item.title.toLowerCase().includes(newCourseTitle)
+                    item.id.toLowerCase().includes(newCourseId.toLowerCase()) ||
+                    item.title
+                        .toLowerCase()
+                        .includes(newCourseTitle.toLowerCase())
             ).length > 0
         ) {
             console.log("Course already exists");
+            setBoxText("Course already exists");
             return;
         }
-        console.log("newCourseId :>> ", newCourseId);
         courses.createCourse({
             courseId: newCourseId,
             title: newCourseTitle,
@@ -69,6 +79,11 @@ const CourseList = () => {
         <div style={{ position: "relative" }} className="root-page">
             <Navbar username={user?.currentUser?.username} />
             <AsyncDataWrapper data={courses?.courses} error={courses?.error}>
+                {/* <MessageBox
+                    className="message-box"
+                    boxActive={boxActive}
+                    boxText={boxText}
+                /> */}
                 <div className="list-header">
                     <div>
                         <span>Courses</span>

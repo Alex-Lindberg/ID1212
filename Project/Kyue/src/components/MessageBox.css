@@ -1,8 +1,7 @@
 .message-box-container {
-    margin-top: 2em;
-    display: flex;
-    justify-content: center;
+    display: relative;
     width: 100%;
+    z-index: 100;
 }
 
 .message-box-wrapper {
