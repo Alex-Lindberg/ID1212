@@ -5,9 +5,10 @@ import { Provider, useDispatch } from "react-redux";
 import { Login, Root, Queue, CourseList } from "./routes";
 import { useUserState, useCourseState } from "./hooks";
 import ErrorPage from "./errorPage";
-import store from "./store";
+import store, { persistor } from "./store";
 
 import "./index.css";
+import { PersistGate } from "redux-persist/integration/react";
 
 const router = createBrowserRouter(
     [
@@ -57,11 +58,13 @@ const LifeCycle = ({ children }) => {
 };
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <Provider store={store}>
-        <React.StrictMode>
-            <LifeCycle>
-                <RouterProvider router={router} />
-            </LifeCycle>
-        </React.StrictMode>
-    </Provider>
+    <React.StrictMode>
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <LifeCycle>
+                    <RouterProvider router={router} />
+                </LifeCycle>
+            </PersistGate>
+        </Provider>
+    </React.StrictMode>
 );
