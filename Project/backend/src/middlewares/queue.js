@@ -51,13 +51,12 @@ const setItem = async (req, res, next) => {
             return res.sendStatus(400);
         const location = req.body.location ? `'${req.body.location}'` : null;
         const comment = req.body.comment ? `'${req.body.comment}'` : null;
-        const status = req.body.status ? `${req.body.status}` : null;
         const pgResponse = await query(`SELECT update_queue_item(
                 '${req.body.userId}'::UUID, 
                 '${req.params.courseId}', 
                 ${comment},
                 ${location},
-                ${status})`);
+                ${req.body.status})`);
         if(pgResponse.rows.length > 0)
             res.locals.queueItem = pgResponse.rows[0].update_queue_item
         if(res.locals.queueItem.location === "null") delete res.locals.queueItem.location

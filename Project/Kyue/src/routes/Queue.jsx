@@ -50,7 +50,7 @@ const Queue = () => {
             userToUpdate: item === null ? user.currentUser : item.userId,
             location: location !== "" ? location : null,
             comment: comment !== "" ? comment : null,
-            status: item === null ? status : item.status,
+            status: item === null ? status : !item.status,
         });
     };
 
@@ -122,7 +122,7 @@ const Queue = () => {
                                                 if (queue.isAdministrator) {
                                                     handleRecieveHelp({
                                                         userId: item.user_id,
-                                                        status: !item?.status,
+                                                        status: item?.status,
                                                     });
                                                 }
                                             }}
@@ -131,7 +131,7 @@ const Queue = () => {
                                             <td>{item?.username + " "}</td>
                                             <td>{item?.location}</td>
                                             <td>{item?.comment}</td>
-                                            <td>{`${item?.status}`}</td>
+                                            <td>{item?.status ? 'Active' : 'Waiting'}</td>
                                         </tr>
                                     );
                                 })

@@ -184,7 +184,7 @@ CREATE OR REPLACE FUNCTION update_queue_item(
     UPDATE queue_item SET 
         location = COALESCE ($3, location),
         comment = COALESCE ($4, comment),
-        status = COALESCE ($5, status)
+        status = $5
     WHERE user_id=$1
     AND course_id=$2;
     SELECT json_build_object(

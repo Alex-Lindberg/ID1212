@@ -62,10 +62,10 @@ const formatUpdateItemBody = (userToUpdate, location, comment, status) => {
     return Object.assign(
         {
             userId: userToUpdate,
+            status: status,
         },
         location === null ? null : { location: location },
-        comment === null ? null : { comment: comment },
-        status === null ? null : { status: status }
+        comment === null ? null : { comment: comment }
     );
 };
 
