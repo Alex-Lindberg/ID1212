@@ -54,7 +54,12 @@ const queueSlice = createSlice({
         });
         builder.addCase(fetchQueue.fulfilled, (state, action) => {
             state.loading = false;
-            state.queue = action.payload;
+            state.queue = action.payload.map((item) => {
+                update(item.created_at, {
+                    $set: new Date(item.created_at),
+                });
+                return item
+            });
             state.error = "";
         });
         builder.addCase(fetchQueue.rejected, (state, action) => {
@@ -87,6 +92,9 @@ const queueSlice = createSlice({
         });
         builder.addCase(enqueue.fulfilled, (state, action) => {
             state.loading = false;
+            update(action.payload.created_at, {
+                $set: new Date(action.payload.created_at),
+            });
             state.queue = [...state.queue, action.payload];
             state.error = "";
         });
@@ -105,18 +113,23 @@ const queueSlice = createSlice({
                 const idx = state.queue.findIndex(
                     (qItem) => qItem.user_id === item?.user_id
                 );
-                console.log('location: { $set: action.payload?.location  :>> ',state.queue[idx].location);
                 update(state, {
                     queue: {
                         [idx]: {
-                            location: { $set: (action.payload?.location 
-                                || state.queue[idx].location)
-                             },
-                            comment: {$set: (action.payload?.comment 
-                                || state.queue[idx].comment)
+                            location: {
+                                $set:
+                                    action.payload?.location ||
+                                    state.queue[idx].location,
                             },
-                            status: {$set: (action.payload?.status 
-                                || state.queue[idx].status)
+                            comment: {
+                                $set:
+                                    action.payload?.comment ||
+                                    state.queue[idx].comment,
+                            },
+                            status: {
+                                $set:
+                                    action.payload?.status ||
+                                    state.queue[idx].status,
                             },
                         },
                     },

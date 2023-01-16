@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS queue_item (
     location text,
     comment text,
     status boolean,
+    created_at TIMESTAMP,
     PRIMARY KEY (user_id, course_id)
 );
 
@@ -134,7 +135,7 @@ CREATE OR REPLACE FUNCTION enqueue(
  AS $$ 
  BEGIN
     INSERT INTO queue_item
-    VALUES ($1, $2, $3, $4, false)
+    VALUES ($1, $2, $3, $4, false, NOW())
     ON CONFLICT (user_id, course_id) DO NOTHING;
 
     UPDATE courses SET status=status+1
@@ -146,7 +147,8 @@ CREATE OR REPLACE FUNCTION enqueue(
         'username', users.username, 
         'location', queue_item.location, 
         'comment', queue_item.comment, 
-        'status', queue_item.status)
+        'status', queue_item.status,
+        'created_at', queue_item.created_at)
     FROM queue_item 
     INNER JOIN users ON users.id=queue_item.user_id
     WHERE users.id=$1 AND queue_item.course_id=$2
@@ -191,7 +193,8 @@ CREATE OR REPLACE FUNCTION update_queue_item(
         'username', users.username, 
         'location', queue_item.location, 
         'comment', queue_item.comment, 
-        'status', queue_item.status)
+        'status', queue_item.status,
+        'created_at', queue_item.created_at)
     FROM queue_item INNER JOIN users ON users.id=queue_item.user_id
     WHERE queue_item.course_id=$2
     INTO item;
