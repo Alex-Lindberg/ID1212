@@ -136,6 +136,10 @@ CREATE OR REPLACE FUNCTION enqueue(
     INSERT INTO queue_item
     VALUES ($1, $2, $3, $4, false)
     ON CONFLICT (user_id, course_id) DO NOTHING;
+
+    UPDATE courses SET status=status+1
+    WHERE courses.id=$2;
+
     SELECT json_build_object(
         'user_id', users.id,
         'course_id', queue_item.course_id,
@@ -158,8 +162,11 @@ CREATE OR REPLACE FUNCTION dequeue(
  BEGIN
     DELETE FROM queue_item
     WHERE queue_item.user_id=$1 AND queue_item.course_id=$2;
-    RETURN FOUND; 
-    
+    CASE WHEN FOUND=true THEN
+        UPDATE courses SET status=status-1
+        WHERE courses.id=$2;
+    END CASE;
+    RETURN FOUND;
  END
  $$
  LANGUAGE plpgsql;
@@ -177,8 +184,10 @@ CREATE OR REPLACE FUNCTION update_queue_item(
         comment = COALESCE ($4, comment),
         status = COALESCE ($5, status)
     WHERE user_id=$1
-    AND course_id=$2; 
+    AND course_id=$2;
     SELECT json_build_object(
+        'user_id', users.id, 
+        'course_id', course_id, 
         'username', users.username, 
         'location', queue_item.location, 
         'comment', queue_item.comment, 
@@ -217,7 +226,7 @@ SELECT register_user('Alex', 'alex5@kth.se', '123');
 SELECT register_user('test', 'test@kth.se', '123');
 SELECT register_user('admin', 'admin@kth.se', '123');
 
-UPDATE users SET role='admin' WHERE username IN ('alex', 'admin');
+UPDATE users SET role='admin' WHERE username IN ('Alex', 'admin');
 
 SELECT register_user('Dennis', 'denhad@kth.se', '123');
 SELECT register_user('Lucas', 'lulars@kth.se', '123');

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import update from "immutability-helper";
 import {
     getCourseItems,
     dequeue as apiDequeue,
@@ -9,6 +10,7 @@ import {
 const initialState = {
     loading: false,
     queue: [],
+    isAdministrator: false,
     error: "",
 };
 
@@ -39,6 +41,12 @@ const queueSlice = createSlice({
         setQueue: (state, action) => {
             state.queue = action.payload;
         },
+        checkIfAdministrator: (state, action) => {
+            const { user, course } = action.payload;
+            state.isAdministrator =
+                user.role === "admin" ||
+                course?.administrators?.includes(user.id);
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchQueue.pending, (state) => {
@@ -61,9 +69,11 @@ const queueSlice = createSlice({
             state.loading = false;
             if (action.payload.data[0].dequeue)
                 state.queue = state.queue.filter(
-                    (item) => !(
-                        item.course_id.includes(action.payload.courseId) &&
-                        item.user_id.includes(action.payload.userId))
+                    (item) =>
+                        !(
+                            item.course_id.includes(action.payload.courseId) &&
+                            item.user_id.includes(action.payload.userId)
+                        )
                 );
             state.error = "";
         });
@@ -77,7 +87,6 @@ const queueSlice = createSlice({
         });
         builder.addCase(enqueue.fulfilled, (state, action) => {
             state.loading = false;
-            console.log("action.payload :>> ", action.payload);
             state.queue = [...state.queue, action.payload];
             state.error = "";
         });
@@ -91,8 +100,28 @@ const queueSlice = createSlice({
         });
         builder.addCase(updateQueueItem.fulfilled, (state, action) => {
             state.loading = false;
-            console.log("action.payload :>> ", action.payload);
-            state.queue = [...state.queue, action.payload];
+            if (action?.payload) {
+                const item = action?.payload;
+                const idx = state.queue.findIndex(
+                    (qItem) => qItem.user_id === item?.user_id
+                );
+                console.log('location: { $set: action.payload?.location  :>> ',state.queue[idx].location);
+                update(state, {
+                    queue: {
+                        [idx]: {
+                            location: { $set: (action.payload?.location 
+                                || state.queue[idx].location)
+                             },
+                            comment: {$set: (action.payload?.comment 
+                                || state.queue[idx].comment)
+                            },
+                            status: {$set: (action.payload?.status 
+                                || state.queue[idx].status)
+                            },
+                        },
+                    },
+                });
+            }
             state.error = "";
         });
         builder.addCase(updateQueueItem.rejected, (state, action) => {

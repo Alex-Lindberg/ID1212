@@ -23,7 +23,8 @@ const CourseList = () => {
     const { courses } = useCourseState();
     const { queue } = useQueueState();
 
-    // const [boxText, boxActive, setBoxText] = useMessageBox(5000, 1000);
+    // @TODO: fix styling when using message box
+    /* const [boxText, boxActive, setBoxText] = useMessageBox(5000, 1000); */
     const [filteredList, setFilteredList] = useState([]);
 
     const [newCourseId, setNewCourseId] = useState("");

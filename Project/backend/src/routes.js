@@ -109,7 +109,7 @@ const courseRoutes = (app) => {
         responseMiddleware.sendResponse("queueItem")
     );
     app.patch(
-        "/api/courses/:courseId/queue/:queueItemId",
+        "/api/courses/:courseId/queue",
         coursesMiddleware.initLocals,
         usersMiddleware.getUserByEmail,
         authMiddleware.getSession,

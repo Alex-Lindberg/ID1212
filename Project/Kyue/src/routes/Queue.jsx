@@ -7,15 +7,17 @@ import QueueForm from "../components/QueueForm";
 
 import "./Queue.css";
 import { useState } from "react";
+import { useCourseState } from "../hooks";
 
 const Queue = () => {
     const { user } = useUserState();
     const { queue } = useQueueState();
+    const { courses } = useCourseState();
     const courseId = useLoaderData();
 
-    const [location, setLocation] = useState("");
-    const [comment, setComment] = useState("");
-    const [status, setStatus] = useState(false);
+    const [location, setLocation] = useState(null);
+    const [comment, setComment] = useState(null);
+    const [status, setStatus] = useState(null);
     const [inQueue, setInQueue] = useState(false);
 
     const toggleStatus = () => {
@@ -37,16 +39,35 @@ const Queue = () => {
             setInQueue(!inQueue);
         }
     };
-    const handleRecieveHelp = () => {
-        console.log("Getting help");
+
+    const handleRecieveHelp = (item) => {
+        if (item === null) {
+            setStatus(!status);
+        }
+        queue.updateQueueItem({
+            courseId: courseId,
+            user: user.currentUser,
+            userToUpdate: item === null ? user.currentUser : item.userId,
+            location: location !== "" ? location : null,
+            comment: comment !== "" ? comment : null,
+            status: item === null ? status : item.status,
+        });
     };
 
     useEffect(() => {
         if (courseId && !user?.currentUser) return;
-        queue.fetchQueue({ courseId: courseId, user: user.currentUser });
+        (async () =>
+            queue.fetchQueue({
+                courseId: courseId,
+                user: user.currentUser,
+            }))().then(() => {
+            const course = courses?.courses?.find((c) => c?.id === courseId);
+            queue.checkIfAdministrator({
+                user: user?.currentUser,
+                course: course,
+            });
+        });
     }, [courseId, !user?.currentUser]);
-
-    useEffect(() => {}, [queue?.queue]);
 
     return (
         <div style={{ position: "relative" }} className="queue-page">
@@ -73,7 +94,7 @@ const Queue = () => {
                     setComment={setComment}
                     toggleStatus={toggleStatus}
                     handleSubmit={handleSubmit}
-                    handleRecieveHelp={handleRecieveHelp}
+                    handleRecieveHelp={(e) => handleRecieveHelp(null)}
                 />
                 <table className="queue-container">
                     <thead>
@@ -97,6 +118,14 @@ const Queue = () => {
                                             key={i}
                                             className="course-item"
                                             aria-checked={item?.status}
+                                            onClick={(e) => {
+                                                if (queue.isAdministrator) {
+                                                    handleRecieveHelp({
+                                                        userId: item.user_id,
+                                                        status: !item?.status,
+                                                    });
+                                                }
+                                            }}
                                         >
                                             <td>{i + 1}</td>
                                             <td>{item?.username + " "}</td>

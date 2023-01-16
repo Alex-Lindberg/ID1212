@@ -61,7 +61,7 @@ export const dequeue = async ({ user, courseId }) => {
     }
 };
 
-export const updateQueueItem = async ({ courseId, user }) => {
+export const updateQueueItem = async ({ courseId, user, userToUpdate, location, comment, status }) => {
     try {
         if (!user || !courseId) return;
         const config = {
@@ -72,7 +72,12 @@ export const updateQueueItem = async ({ courseId, user }) => {
             },
         };
         return axios
-            .put(`${routes.HTTP_API}/api/courses/${courseId}/queue`, config)
+            .patch(`${routes.HTTP_API}/api/courses/${courseId}/queue`, {
+                userId: userToUpdate,
+                location: location,
+                comment: comment,
+                status: status
+            }, config)
             .then(({ data }) => {
                 return data;
             })

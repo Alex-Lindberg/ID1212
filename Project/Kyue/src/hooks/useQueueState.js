@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { dequeue, enqueue, queueActions, fetchQueue  } from "../reducers/queueReducer";
+import { dequeue, enqueue, queueActions, fetchQueue, updateQueueItem  } from "../reducers/queueReducer";
 
 const useQueueState = () => {
     const queueState = useSelector((state) => state.queueState);
@@ -10,6 +10,9 @@ const useQueueState = () => {
             get queue() {
                 return queueState.queue
             },
+            get isAdministrator() {
+                return queueState.isAdministrator
+            },
             get error() {
                 return queueState.error !== "" ? queueState.error : ""
             },
@@ -17,7 +20,10 @@ const useQueueState = () => {
                 dispatch(queueActions.setQueue(queue))
             },
             fetchQueue: (params) => {
-                dispatch(fetchQueue(params))
+                dispatch(fetchQueue(params)).un
+            },
+            checkIfAdministrator: (params) => {
+                dispatch(queueActions.checkIfAdministrator(params))
             },
             enqueue: (params) => {
                 return dispatch(enqueue(params))
@@ -25,7 +31,7 @@ const useQueueState = () => {
             dequeue: (params) => {
                 return dispatch(dequeue(params))
             },
-            updateQueueItems: (params) => {
+            updateQueueItem: (params) => {
                 return dispatch(updateQueueItem(params))
             }
         },

@@ -56,11 +56,17 @@ const storeInterface = {
         get queue() {
             return store.getState().queueState.queue
         },
+        get isAdministrator() {
+            return store.getState().queueState.isAdministrator
+        },
         get error() {
             return store.getState().queueState.error
         },
         setQueue: (queue) => {
             return store.dispatch(queueActions.setQueue(queue))
+        },
+        checkIfAdministrator: (params) => {
+            return store.dispatch(queueActions.checkIfAdministrator(params))
         },
         fetchQueue: (params) => {
             return store.dispatch(fetchQueue(params))
@@ -71,7 +77,7 @@ const storeInterface = {
         dequeue: (params) => {
             return store.dispatch(dequeue(params))
         },
-        updateQueueItems: (params) => {
+        updateQueueItem: (params) => {
             return store.dispatch(updateQueueItem(params))
         }
     }
