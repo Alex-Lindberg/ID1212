@@ -8,6 +8,8 @@ import QueueForm from "../components/QueueForm";
 import "./Queue.css";
 import { useState } from "react";
 import { useCourseState } from "../hooks";
+import { useCallback } from "react";
+import addPolling from "../hoc/addPolling";
 
 const Queue = () => {
     const { user } = useUserState();
@@ -24,6 +26,22 @@ const Queue = () => {
         setStatus(!status);
     };
 
+    const fetchQueue = useCallback(() => {
+        if (courseId && !user?.currentUser) return;
+        (async () =>
+            queue.fetchQueue({
+                courseId: courseId,
+                user: user.currentUser,
+            }))().then(() => {
+            const course = courses?.courses?.find((c) => c?.id === courseId);
+            queue.checkIfAdministrator({
+                user: user?.currentUser,
+                course: course,
+            });
+        });
+    }, []);
+    const forceUpdate = addPolling(fetchQueue, 3000);
+
     const handleSubmit = () => {
         if (!courseId || !user?.currentUser) return;
         if (!inQueue && location !== "") {
@@ -38,6 +56,7 @@ const Queue = () => {
             queue.dequeue({ user: user.currentUser, courseId: courseId });
             setInQueue(!inQueue);
         }
+        forceUpdate();
     };
 
     const handleRecieveHelp = (item) => {
@@ -52,22 +71,9 @@ const Queue = () => {
             comment: comment !== "" ? comment : null,
             status: item === null ? status : !item.status,
         });
+        forceUpdate();
     };
 
-    useEffect(() => {
-        if (courseId && !user?.currentUser) return;
-        (async () =>
-            queue.fetchQueue({
-                courseId: courseId,
-                user: user.currentUser,
-            }))().then(() => {
-            const course = courses?.courses?.find((c) => c?.id === courseId);
-            queue.checkIfAdministrator({
-                user: user?.currentUser,
-                course: course,
-            });
-        });
-    }, [courseId, !user?.currentUser]);
 
     return (
         <div style={{ position: "relative" }} className="queue-page">
@@ -131,7 +137,11 @@ const Queue = () => {
                                             <td>{item?.username + " "}</td>
                                             <td>{item?.location}</td>
                                             <td>{item?.comment}</td>
-                                            <td>{item?.status ? 'Active' : 'Waiting'}</td>
+                                            <td>
+                                                {item?.status
+                                                    ? "Active"
+                                                    : "Waiting"}
+                                            </td>
                                         </tr>
                                     );
                                 })
