@@ -11,7 +11,6 @@ const initLocals = (_req, res, next) => {
 
 const getUserByEmail = async (req, res, next) => {
     try {
-        console.log('req.body :>> ', req.body);
         const email = req.body.email || utils.getUser(req).email;
         const results = await query(
             `SELECT * FROM users WHERE email='${email}'`

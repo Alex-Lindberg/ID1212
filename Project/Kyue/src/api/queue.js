@@ -45,10 +45,7 @@ export const dequeue = async ({ user, courseId }) => {
             },
         };
         return axios
-            .delete(
-                `${routes.HTTP_API}/api/courses/${courseId}/queue`,
-                config
-            )
+            .delete(`${routes.HTTP_API}/api/courses/${courseId}/queue`, config)
             .then(({ data }) => {
                 return { data: data, userId: user.id, courseId: courseId };
             })
@@ -61,7 +58,25 @@ export const dequeue = async ({ user, courseId }) => {
     }
 };
 
-export const updateQueueItem = async ({ courseId, user, userToUpdate, location, comment, status }) => {
+const formatUpdateItemBody = (userToUpdate, location, comment, status) => {
+    return Object.assign(
+        {
+            userId: userToUpdate,
+        },
+        location === null ? null : { location: location },
+        comment === null ? null : { comment: comment },
+        status === null ? null : { status: status }
+    );
+};
+
+export const updateQueueItem = async ({
+    courseId,
+    user,
+    userToUpdate,
+    location,
+    comment,
+    status,
+}) => {
     try {
         if (!user || !courseId) return;
         const config = {
@@ -72,12 +87,11 @@ export const updateQueueItem = async ({ courseId, user, userToUpdate, location, 
             },
         };
         return axios
-            .patch(`${routes.HTTP_API}/api/courses/${courseId}/queue`, {
-                userId: userToUpdate,
-                location: location,
-                comment: comment,
-                status: status
-            }, config)
+            .patch(
+                `${routes.HTTP_API}/api/courses/${courseId}/queue`,
+                formatUpdateItemBody(userToUpdate, location, comment, status),
+                config
+            )
             .then(({ data }) => {
                 return data;
             })
