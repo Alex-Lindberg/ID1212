@@ -13,7 +13,6 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- #######
 
 CREATE TYPE roles AS ENUM ('admin', 'user');
--- CREATE TYPE queue_status AS ENUM (false, 'Receiving help');
 
 -- ########
 --  TABLES
@@ -31,7 +30,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS courses (
     id text PRIMARY KEY,
     title text NOT NULL,
-    status integer
+    status integer,
+    course_description text
 );
 
 CREATE TABLE IF NOT EXISTS queue_item (
@@ -43,13 +43,6 @@ CREATE TABLE IF NOT EXISTS queue_item (
     created_at TIMESTAMP,
     PRIMARY KEY (user_id, course_id)
 );
-
--- CREATE TABLE IF NOT EXISTS messages (
---     id UUID PRIMARY KEY,
---     user_id UUID NOT NULL REFERENCES users (id),
---     time timestamp NOT NULL,
---     message text NOT NULL
--- );
 
 CREATE TABLE IF NOT EXISTS administrators (
     user_id UUID NOT NULL REFERENCES users (id),
@@ -120,10 +113,13 @@ CREATE OR REPLACE FUNCTION create_course(
 AS $$ 
 BEGIN
     INSERT INTO courses
-    VALUES ($1, $2, 0)
+    VALUES ($1, $2, 0, '')
     ON CONFLICT DO NOTHING
     RETURNING
-        json_build_object('id', courses.id, 'title', courses.title, 'status', courses.status) INTO course;
+        json_build_object(
+            'id', courses.id, 'title', courses.title, 
+            'status', courses.status, 'course_description', courses.course_description
+        ) INTO course;
 END
 $$
 LANGUAGE plpgsql;
@@ -169,6 +165,22 @@ CREATE OR REPLACE FUNCTION dequeue(
         WHERE courses.id=$2;
     END CASE;
     RETURN FOUND;
+ END
+ $$
+ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION set_course_description(
+    IN co_id text, IN course_desc text, OUT course json) 
+    RETURNS json
+ AS $$ 
+ BEGIN
+    UPDATE courses SET course_description=$2
+    WHERE courses.id=$1
+    RETURNING
+        json_build_object(
+            'id', courses.id, 'title', courses.title, 
+            'status', courses.status, 'course_description', courses.course_description
+        ) INTO course;
  END
  $$
  LANGUAGE plpgsql;

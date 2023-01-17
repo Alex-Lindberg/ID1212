@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { courseActions, createCourse, fetchCourses } from "../reducers/courseReducer";
+import { courseActions, createCourse, fetchCourses, setCourseDescription } from "../reducers/courseReducer";
 
 const useCourseState = () => {
     const courseState = useSelector((state) => state.courseState);
@@ -21,6 +21,9 @@ const useCourseState = () => {
             },
             createCourse: (params) => {
                 dispatch(createCourse(params))
+            },
+            setCourseDescription: (params) => {
+                dispatch(setCourseDescription(params))
             }
         },
     };

@@ -20,20 +20,17 @@
 .queue-button-wrapper > input {
     font-size: var(--font-size-0);
     margin-top: 0;
-    border-radius: 0;
+    border-radius: 3px;
     transition: background-color 250ms ease-in-out;
 }
 .queue-button-wrapper > input:first-child {
-    border-radius: 3px 0 0 3px;
     background-color: rgb(67, 136, 136);
 }
 .queue-button-wrapper > input:first-child[value="Dequeue"] {
     background-color: rgb(136, 136, 67);
 }
 .queue-button-wrapper > input:last-child {
-    border-left: 1px var(--bg-0) solid;
     background-color: rgb(170, 75, 50);
-    border-radius: 0 3px 3px 0;
 }
 .queue-button-wrapper > input:last-child[value="Set Waiting"] {
     background-color: lightslategray;

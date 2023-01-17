@@ -50,6 +50,9 @@ const storeInterface = {
         },
         createCourse: (params) => {
             return store.dispatch(createCourse(params))
+        },
+        setCourseDescription: (params) => {
+            return store.dispatch(setCourseDescription(params))
         }
     },
     queue: {

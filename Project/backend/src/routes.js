@@ -89,6 +89,16 @@ const courseRoutes = (app) => {
         coursesMiddleware.getCourseItems,
         responseMiddleware.sendResponse("courses")
     );
+    app.patch(
+        "/api/courses/:courseId",
+        coursesMiddleware.initLocals,
+        usersMiddleware.getUserByEmail,
+        authMiddleware.getSession,
+        authMiddleware.validateSession,
+        coursesMiddleware.checkCourseExist,
+        coursesMiddleware.updateCourseDescription,
+        responseMiddleware.sendResponse("course")
+    );
     
     app.post(
         "/api/courses/:courseId/queue",

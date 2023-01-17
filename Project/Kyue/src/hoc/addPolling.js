@@ -3,14 +3,13 @@ import { useCallback, useEffect, useRef } from "react";
 const addPolling = (func, interval) => {
     
     // Number of executions in parallel
-    // const runningCount = useRef(0);
+    const runningCount = useRef(0);
     const timeout = useRef();
     const mountedRef = useRef(false);
 
     const next = useCallback(
         (handler) => {
-            // if (mountedRef.current && runningCount.current === 0) {
-            if (mountedRef.current) {
+            if (mountedRef.current && runningCount.current === 0) {
                 timeout.current = window.setTimeout(handler, interval);
             }
         },
@@ -18,9 +17,9 @@ const addPolling = (func, interval) => {
     );
 
     const run = useCallback(async () => {
-        // runningCount.current += 1;
+        runningCount.current += 1;
         const result = await func();
-        // runningCount.current -= 1;
+        runningCount.current -= 1;
 
         next(run);
 

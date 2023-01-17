@@ -80,11 +80,6 @@ const CourseList = () => {
         <div style={{ position: "relative" }} className="root-page">
             <Navbar username={user?.currentUser?.username} />
             <AsyncDataWrapper data={courses?.courses} error={courses?.error}>
-                {/* <MessageBox
-                    className="message-box"
-                    boxActive={boxActive}
-                    boxText={boxText}
-                /> */}
                 <div className="list-header">
                     <div>
                         <span>Courses</span>

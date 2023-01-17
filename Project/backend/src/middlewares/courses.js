@@ -37,9 +37,25 @@ const createCourse = async (req, res, next) => {
     }
 };
 
+const updateCourseDescription = async (req, res, next) => {
+    try {
+        console.log('req.body.description :>> ', req.body.description);
+        const pgResult = await query(
+            `SELECT set_course_description('${req.params.courseId}', '${req.body.description}')`
+        );
+        res.locals.course = pgResult?.rows?.[0]?.set_course_description
+        return next();
+    } catch (error) {
+        console.log("error :>> ", error);
+        return res.sendStatus(500);
+    }
+};
+
 const setCourseAdministrator = (boolean) => async (req, res, next) => {
     try {
-        const user = getUser(req) || res.locals.user || null;
+        const user = req.body.userId || res.locals.user || null;
+        if (!user)
+            res.sendStatus(400);
         if (boolean) {
             await query(
                 `INSERT INTO administrators VALUES ('${user.id}', '${req.body.courseId}')`
@@ -173,4 +189,5 @@ module.exports = {
     isAdministrator,
     checkCourseExist,
     getCourseItems,
+    updateCourseDescription,
 };

@@ -67,3 +67,30 @@ export const createCourse = async ({courseId, title, user}) => {
         return rejectWithValue(err.response.data);
     }
 };
+
+export const setCourseDescription = async ({user, courseId, description}) => {
+    try {
+        console.log('description :>> ', description);
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                user: JSON.stringify(user),
+                sessionId: user.sessionId,
+            },
+        };
+        return axios
+            .patch(`${routes.HTTP_API}/api/courses/${courseId}`, {
+                description: description,
+            }, config)
+            .then(({ data }) => {
+                console.log('data :>> ', data);
+                return data;
+            })
+            .catch(console.error);
+    } catch (err) {
+        if (!err.response) {
+            throw err;
+        }
+        return rejectWithValue(err.response.data);
+    }
+};

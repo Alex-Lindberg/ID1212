@@ -1,6 +1,6 @@
 import useUserState from "../hooks/useUserState";
 import { useEffect } from "react";
-import { AsyncDataWrapper, Navbar } from "../components";
+import { AdminTools, AsyncDataWrapper, Navbar } from "../components";
 import useQueueState from "../hooks/useQueueState";
 import { useLoaderData } from "react-router-dom";
 import QueueForm from "../components/QueueForm";
@@ -21,6 +21,7 @@ const Queue = () => {
     const [comment, setComment] = useState(null);
     const [status, setStatus] = useState(null);
     const [inQueue, setInQueue] = useState(false);
+    const [queueText, setQueueText] = useState("");
 
     const toggleStatus = () => {
         setStatus(!status);
@@ -40,7 +41,7 @@ const Queue = () => {
             });
         });
     }, []);
-    const forceUpdate = addPolling(fetchQueue, 3000);
+    const forceUpdate = addPolling(fetchQueue, 20000); // set to 3000
 
     const handleSubmit = () => {
         if (!courseId || !user?.currentUser) return;
@@ -74,6 +75,20 @@ const Queue = () => {
         forceUpdate();
     };
 
+    useEffect(() => {
+        if(!courses?.courses) return
+        const course = courses?.courses?.find((c) => c?.id === courseId);
+        setQueueText(course?.course_description)
+    }, [])
+
+    const handleSetDescription = (text) => {
+        if (!queue.isAdministrator) return;
+        console.log("{courseId: courseId, description: text} :>> ", {
+            courseId: courseId,
+            description: text,
+        });
+        courses.setCourseDescription({ user: user?.currentUser, courseId: courseId, description: queueText });
+    };
 
     return (
         <div style={{ position: "relative" }} className="queue-page">
@@ -82,15 +97,47 @@ const Queue = () => {
                 <header className="queue-header">
                     <h1>{courseId || "Queue"}</h1>
                 </header>
-                <div className="queue-description-box">
-                    <span>
-                        Heres some message text, it's gonna repeat for a bit
-                        since we're emulating instructions. Heres some message
-                        text, it's gonna repeat for a bit since we're emulating
-                        instructions. Heres some message text, it's gonna repeat
-                        for a bit since we're emulating instructions.
-                    </span>
-                </div>
+                {queue.isAdministrator ? (
+                    <div className="queue-description-box">
+                        <h4 className="description-box-header">
+                            Queue Desciprtion
+                        </h4>
+                        <form
+                            id="descform"
+                            className="admin-description-box"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                console.log('e.target[0] :>> ', e.target);
+                                setQueueText(e.target[0].textContent)
+                                handleSetDescription(e.target[0].textContent);
+                            }}
+                        >
+                            <textarea
+                                className="admin-description-box"
+                                defaultValue={queueText}
+                                // onChange={(e) => setQueueText(e.target.textContent)}
+                                // form="descform"
+                            />
+                            <button type="submit" title="Set new description">
+                                Set new Description
+                            </button>
+                        </form>
+                    </div>
+                ) : (
+                    <div className="queue-description-box">
+                        <span>{queueText}</span>
+                    </div>
+                )}
+                {queue.isAdministrator && (
+                    <AdminTools
+                        className="admin-tools-box"
+                        adminList={
+                            courses?.courses?.filter(
+                                (c) => c?.id === courseId
+                            )?.[0]?.administrators
+                        }
+                    />
+                )}
                 <div className="line-break" />
                 <QueueForm
                     className="form-container"

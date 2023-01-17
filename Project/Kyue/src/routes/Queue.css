@@ -18,10 +18,28 @@
     grid-column: col-start 4 / span 8;
     grid-row: row-start 3;
 }
+.description-box-header {
+    margin: 18px 0px 5px 20px;
+}
 .queue-description-box {
     font-size: 16px;
     font-family: Roboto Mono;
     grid-column: col-start 4 / span 4;
+    grid-row: 1 / 2;
+}
+.admin-description-box {
+    grid-column: col-start 4 / span 4;
+    grid-row: 1 / 2;
+    resize: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    padding: 10px;
+}
+.admin-tools-box{
+    font-size: 16px;
+    font-family: Roboto Mono;
+    grid-column: col-start 8 / span 4;
     grid-row: 1 / 2;
 }
 .queue-container {
@@ -129,6 +147,9 @@
         display: grid;
         grid-template-columns: subgrid;
     }
+    .description-box-header {
+        margin: 0 auto 1em auto;
+    }
     .queue-page-wrapper > * > * {
         grid-column: 2 / -2;
     }
@@ -138,18 +159,21 @@
     .queue-page-wrapper .queue-description-box {
         grid-row: 2;
     }
-    .queue-page-wrapper .form-container {
+    .queue-page-wrapper .admin-tools-box {
         grid-row: 3;
+    }
+    .queue-page-wrapper .form-container {
+        grid-row: 4;
         padding-bottom: 0;
         margin-bottom: 0;
     }
     .queue-page-wrapper .line-break {
-        grid-row: 4;
+        grid-row: 5;
 
         grid-column: 2 / -2;
     }
     .queue-page-wrapper .queue-container {
-        grid-row: 5;
+        grid-row: 6;
         padding-top: 0;
     }
     .queue-container .course-item {
